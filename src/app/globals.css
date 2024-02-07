@@ -2,32 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+/* input:not(.swal2-input)[type="text"],
+input:not(.swal2-input)[type="password"],
+input:not(.swal2-input)[type="email"],
+input:not(.swal2-input)[type="number"],
+input:not(.swal2-input)[type="date"],
+input:not(.swal2-input)[type="time"],
+input:not(.swal2-input)[type="datetime-local"] {
+  @apply w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-purple-600;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
+select {
+  @apply w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-purple-600;
+} */
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+tbody tr:nth-child(odd) {
+  @apply bg-gray-100;
 }
