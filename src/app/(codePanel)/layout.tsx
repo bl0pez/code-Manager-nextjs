@@ -18,7 +18,9 @@ export default async function CodePanelLayout({
       {/* Sidebar */}
       <Sidebar />
       {/* Main Content */}
-      <main className="bg-slate-100 col-span-5 p-3">{children}</main>
+      <main className="bg-slate-100 col-span-5 p-3 w-full overflow-y-auto">
+        {children}
+      </main>
     </div>
   );
 }

@@ -24,3 +24,11 @@ model User {
   password String
   role     Role    @default(user)
 }
+
+model CodeBlue {
+  id        String   @id @default(uuid())
+  createdAt DateTime
+  team      String
+  location  String
+  operator  String
+}

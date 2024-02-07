@@ -11,38 +11,39 @@ import { SidebarMenuItem } from "./SidebarMenuItem";
 import { RiMenu3Fill } from "react-icons/ri";
 import { CiLogout } from "react-icons/ci";
 import { logout } from "@/actions/auth/logout";
-import { useSession } from "next-auth/react";
+import { ProtectiveRoles } from "@/components/ProtectiveRoles";
+import { RiAdminFill } from "react-icons/ri";
 
 const className = "w-6 h-6";
 
 const menuItems = [
   {
-    path: "/codePanel/dashboard",
+    path: "/",
     title: "Dashboard",
     icon: <MdOutlineDashboard className={className} />,
   },
   {
-    path: "/codePanel/blueCode",
+    path: "/blueCode",
     title: "Código Azul",
     icon: <TbMedicalCross className={className} />,
   },
   {
-    path: "/codePanel/greenCode",
+    path: "/greenCode",
     title: "Código Verde",
     icon: <IoShieldOutline className={className} />,
   },
   {
-    path: "/codePanel/redCode",
+    path: "/redCode",
     title: "Código Rojo",
     icon: <FaFire className={className} />,
   },
   {
-    path: "/codePanel/airCode",
+    path: "/airCode",
     title: "Código Aéreo",
     icon: <FaHelicopter className={className} />,
   },
   {
-    path: "/codePanel/leakCode",
+    path: "/leakCode",
     title: "Código Fuga",
     icon: <FaRunning className={className} />,
   },
@@ -50,9 +51,6 @@ const menuItems = [
 
 export const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  //Hooks para el manejo de sesiones
-  const { data: session } = useSession();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -84,6 +82,14 @@ export const Sidebar = () => {
               toggleSidebar={toggleSidebar}
             />
           ))}
+          <ProtectiveRoles roles={["admin"]}>
+            <SidebarMenuItem
+              path="/admin"
+              title="Admin"
+              icon={<RiAdminFill className={className} />}
+              toggleSidebar={toggleSidebar}
+            />
+          </ProtectiveRoles>
         </nav>
         <button
           onClick={() => logout()}
