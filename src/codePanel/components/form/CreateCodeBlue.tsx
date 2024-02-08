@@ -41,7 +41,7 @@ export const CreateCodeBlue = ({ operatos, teams }: Props) => {
 
     if (!codeBlue.ok) return;
 
-    setDate(new Date().toISOString().slice(0, 16));
+    setDate("");
     setTeam("");
     setOperator("");
     setLocation("");

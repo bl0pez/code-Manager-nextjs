@@ -3,7 +3,13 @@ import { CreateCodeBlue } from "../form/CreateCodeBlue";
 import { getCodeBlueTeams } from "@/actions/codePanel/getCodeBlueTeams";
 import { getOperators } from "@/actions/codePanel/getOperatos";
 
-const columns = ["Fecha/Hora", "Equipo", "Ubicación", "Oficial", "Operador"];
+const columns = [
+  "Fecha/Hora",
+  "Equipo",
+  "Ubicación",
+  "Funcionario/a",
+  "Operador",
+];
 
 const TableCodeBlue = async () => {
   const { codeBlue, currentPage, totalPages } = await getCodeBlue({});
