@@ -8,7 +8,7 @@ interface PaginationOptions {
 
 export const getCodeBlue = async ({
   page = 1,
-  take = 10,
+  take = 5,
 }: PaginationOptions) => {
   if (isNaN(Number(page))) page = 1;
   if (page < 1) page = 1;

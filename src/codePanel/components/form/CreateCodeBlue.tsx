@@ -1,8 +1,10 @@
 "use client";
 import { useMemo, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { Operator, Team } from "@prisma/client";
-import { createCodeBlue } from "@/actions/codePanel/createCodeBlue";
+import { createCodeBlue } from "@/actions/codePanel/codeBlue/createCodeBlue";
 import { SelectOperatos } from "@/components/ui/SelectOperatos";
 import { SelectTeamCodeBlue } from "@/components/ui/SelectTeamCodeBlue";
 import { Input } from "../input/Input";
@@ -15,7 +17,7 @@ interface Props {
 export const CreateCodeBlue = ({ operatos, teams }: Props) => {
   const [team, setTeam] = useState("");
   const [operator, setOperator] = useState("");
-  const [date, setDate] = useState("");
+  const [createdAt, setCreatedAt] = useState("");
   const [location, setLocation] = useState("");
   const [officer, setOfficer] = useState("");
   const [optionsTeams, setOptionsTeams] = useState<Team[]>([]);
@@ -31,7 +33,7 @@ export const CreateCodeBlue = ({ operatos, teams }: Props) => {
 
   const onSubmit = async () => {
     const formData = new FormData();
-    formData.append("createdAt", new Date(date).toISOString());
+    formData.append("createdAt", createdAt);
     formData.append("team", team);
     formData.append("location", location);
     formData.append("operator", operator);
@@ -39,9 +41,12 @@ export const CreateCodeBlue = ({ operatos, teams }: Props) => {
 
     const codeBlue = await createCodeBlue(formData);
 
-    if (!codeBlue.ok) return;
+    if (!codeBlue.ok) {
+      toast.error(codeBlue.message);
+      return;
+    }
 
-    setDate("");
+    setCreatedAt("");
     setTeam("");
     setOperator("");
     setLocation("");
@@ -62,8 +67,8 @@ export const CreateCodeBlue = ({ operatos, teams }: Props) => {
             type="datetime-local"
             id="createdAt"
             name="createdAt"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            value={createdAt}
+            onChange={(e) => setCreatedAt(e.target.value)}
           />
         </div>
       </td>
