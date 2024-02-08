@@ -19,15 +19,15 @@ export const CreateCodeBlue = ({ operatos, teams }: Props) => {
   const [location, setLocation] = useState("");
   const [officer, setOfficer] = useState("");
   const [optionsTeams, setOptionsTeams] = useState<Team[]>([]);
-  // const [optionsOperators, setOptionsOperators] = useState<Operator[]>([]);
+  const [optionsOperators, setOptionsOperators] = useState<Operator[]>([]);
 
   useMemo(() => {
     setOptionsTeams(teams);
   }, [teams]);
 
-  // useMemo(() => {
-  //   setOptionsOperators(operatos);
-  // }, [operatos]);
+  useMemo(() => {
+    setOptionsOperators(operatos);
+  }, [operatos]);
 
   const onSubmit = async () => {
     const formData = new FormData();
@@ -96,7 +96,7 @@ export const CreateCodeBlue = ({ operatos, teams }: Props) => {
       <td>
         <SelectOperatos
           value={operator}
-          operatos={operatos}
+          operatos={optionsOperators}
           onChange={(e) => setOperator(e.target.value)}
         />
       </td>
