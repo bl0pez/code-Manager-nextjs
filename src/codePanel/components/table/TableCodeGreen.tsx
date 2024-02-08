@@ -1,8 +1,9 @@
-import { getCodeBlue } from "@/actions/codePanel/getCodeBlue";
-import { CreateCodeBlue } from "../form/CreateCodeBlue";
-import { getCodeBlueTeams } from "@/actions/codePanel/getCodeBlueTeams";
 import { getOperators } from "@/actions/codePanel/getOperatos";
 import { Pagination } from "@/components/ui/Pagination";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { CreateCodeGreen } from "../form/CreateCodeGreen";
+import { getCodeGreen } from "@/actions/codePanel/codeGreen/getCodeGreen";
 
 interface Props {
   page: number;
@@ -10,17 +11,18 @@ interface Props {
 
 const columns = [
   "Fecha/Hora",
-  "Equipo",
   "Ubicación",
-  "Funcionario/a",
+  "Evento",
+  "Carabineros",
+  "Funcionario",
   "Operador",
 ];
 
-const TableCodeBlue = async ({ page }: Props) => {
-  const { codeBlue, currentPage, totalPages } = await getCodeBlue({
+const TableCodeGreen = async ({ page }: Props) => {
+  const { codeGreen, currentPage, totalPages } = await getCodeGreen({
     page,
   });
-  const { teams } = await getCodeBlueTeams();
+
   const { operatos } = await getOperators();
 
   return (
@@ -37,15 +39,15 @@ const TableCodeBlue = async ({ page }: Props) => {
             </tr>
           </thead>
           <tbody>
-            <CreateCodeBlue teams={teams} operatos={operatos} />
-            {codeBlue.map((code) => (
+            <CreateCodeGreen operatos={operatos} />
+            {codeGreen.map((code) => (
               <tr key={code.id}>
                 <td className="px-3.5 py-2">
                   {new Date(code.createdAt).toLocaleString()}
                 </td>
-                <td className="px-3.5 py-2">{code.team}</td>
+                <td className="px-3.5 py-2">{code.event}</td>
                 <td className="px-3.5 py-2">{code.location}</td>
-                <td className="px-3.5 py-2">{code.officer}</td>
+                <td className="px-3.5 py-2">{code.informant}</td>
                 <td className="px-3.5 py-2">{code.operator}</td>
               </tr>
             ))}
@@ -62,8 +64,9 @@ const TableCodeBlue = async ({ page }: Props) => {
         </span>
         <Pagination totalPages={totalPages} />
       </div>
+      <ToastContainer />
     </div>
   );
 };
 
-export default TableCodeBlue;
+export default TableCodeGreen;

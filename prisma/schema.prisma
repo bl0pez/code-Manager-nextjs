@@ -16,6 +16,16 @@ model CodeBlue {
   officer   String
 }
 
+model CodeGreen {
+  id        String   @id @default(uuid())
+  createdAt DateTime
+  location  String
+  event     String
+  police    Boolean
+  informant String
+  operator  String
+}
+
 model Operator {
   id       String @id @default(uuid())
   fullName String

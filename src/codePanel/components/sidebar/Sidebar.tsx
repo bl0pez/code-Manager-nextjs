@@ -28,7 +28,7 @@ const menuItems = [
     icon: <TbMedicalCross className={className} />,
   },
   {
-    path: "/greenCode",
+    path: "/codeGreen",
     title: "Código Verde",
     icon: <IoShieldOutline className={className} />,
   },

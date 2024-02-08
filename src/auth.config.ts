@@ -7,7 +7,7 @@ import prisma from "./lib/prisma";
 const authenticatedRoutes = [
   "/",
   "/blueCode",
-  "/greenCode",
+  "/codeGreen",
   "/redCode",
   "/airCode",
   "/leakCode",

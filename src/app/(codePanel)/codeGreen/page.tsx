@@ -1,4 +1,4 @@
-import TableCodeBlue from "@/codePanel/components/table/TableCodeBlue";
+import TableCodeGreen from "@/codePanel/components/table/TableCodeGreen";
 import { Title } from "@/components/ui/Title";
 
 interface Props {
@@ -7,13 +7,13 @@ interface Props {
   };
 }
 
-export default function BlueCodePage({ searchParams }: Props) {
+export default function CodeGreenPage({ searchParams }: Props) {
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
 
   return (
     <div>
-      <Title title="Código Azul" />
-      <TableCodeBlue page={page} />
+      <Title title="Código Verde" />
+      <TableCodeGreen page={page} />
     </div>
   );
 }
