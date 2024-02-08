@@ -3,14 +3,6 @@ import { auth } from "@/auth.config"
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 
-interface Props {
-createdAt: Date
-team: string
-location: string
-operator: string
-officer: string
-}
-
 export const createCodeBlue = async( formData: FormData) => {
 
     const session = await auth();
@@ -21,10 +13,11 @@ export const createCodeBlue = async( formData: FormData) => {
         }
     }
 
+
     try {
         await prisma.codeBlue.create({
             data: {
-                createdAt: new Date(formData.get("createdAt") as string),
+                createdAt: formData.get("createdAt") as string,
                 team: formData.get("team") as string,
                 location: formData.get("location") as string,
                 operator: formData.get("operator") as string,
@@ -34,12 +27,14 @@ export const createCodeBlue = async( formData: FormData) => {
 
         revalidatePath("/codePanel")
         return {
+            ok: true,
             message: "Código azul creado con éxito"
         }
         
     } catch (error) {
         return {
-            message: "Error al crear el código azul"
+            ok: false,
+            message: "Error al crear el código azul",
         }
     }
 

@@ -1,10 +1,11 @@
 "use client";
-import { Operator, Team } from "@/interfaces";
-import { Input } from "../input/Input";
-import { useState } from "react";
-import { SelectTeamCodeBlue } from "@/components/ui/SelectTeamCodeBlue";
-import { SelectOperatos } from "@/components/ui/SelectOperatos";
+import { useMemo, useState } from "react";
+
+import { Operator, Team } from "@prisma/client";
 import { createCodeBlue } from "@/actions/codePanel/createCodeBlue";
+import { SelectOperatos } from "@/components/ui/SelectOperatos";
+import { SelectTeamCodeBlue } from "@/components/ui/SelectTeamCodeBlue";
+import { Input } from "../input/Input";
 
 interface Props {
   teams: Team[];
@@ -14,19 +15,37 @@ interface Props {
 export const CreateCodeBlue = ({ operatos, teams }: Props) => {
   const [team, setTeam] = useState("");
   const [operator, setOperator] = useState("");
-  const [date, setDate] = useState(new Date().toISOString().slice(0, 16));
+  const [date, setDate] = useState("");
   const [location, setLocation] = useState("");
   const [officer, setOfficer] = useState("");
+  const [optionsTeams, setOptionsTeams] = useState<Team[]>([]);
+  const [optionsOperators, setOptionsOperators] = useState<Operator[]>([]);
+
+  useMemo(() => {
+    setOptionsTeams(teams);
+  }, [teams]);
+
+  useMemo(() => {
+    setOptionsOperators(operatos);
+  }, [operatos]);
 
   const onSubmit = async () => {
     const formData = new FormData();
-    formData.append("createdAt", date);
+    formData.append("createdAt", new Date(date).toISOString());
     formData.append("team", team);
     formData.append("location", location);
     formData.append("operator", operator);
     formData.append("officer", officer);
 
-    const data = await createCodeBlue(formData);
+    const codeBlue = await createCodeBlue(formData);
+
+    if (!codeBlue.ok) return;
+
+    setDate(new Date().toISOString().slice(0, 16));
+    setTeam("");
+    setOperator("");
+    setLocation("");
+    setOfficer("");
   };
 
   return (
@@ -41,8 +60,8 @@ export const CreateCodeBlue = ({ operatos, teams }: Props) => {
         <div>
           <Input
             type="datetime-local"
-            id="datepicker"
-            name="datepicker"
+            id="createdAt"
+            name="createdAt"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
@@ -51,7 +70,7 @@ export const CreateCodeBlue = ({ operatos, teams }: Props) => {
       <td>
         <SelectTeamCodeBlue
           value={team}
-          teams={teams}
+          teams={optionsTeams}
           onChange={(e) => setTeam(e.target.value)}
         />
       </td>
@@ -77,7 +96,7 @@ export const CreateCodeBlue = ({ operatos, teams }: Props) => {
       <td>
         <SelectOperatos
           value={operator}
-          operatos={operatos}
+          operatos={optionsOperators}
           onChange={(e) => setOperator(e.target.value)}
         />
       </td>
