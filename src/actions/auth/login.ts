@@ -12,7 +12,6 @@ export async function authenticate(
   try {
     await signIn("credentials", {
       ...Object.fromEntries(formData),
-      redirect: false,
     });
 
     return "Success";

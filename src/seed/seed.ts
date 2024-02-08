@@ -8,8 +8,18 @@ interface SeedUser {
   role: "admin" | "operator" | "user";
 }
 
+interface SeedOperator {
+  fullName: string;
+}
+
+interface SeedTeam {
+  title: string;
+}
+
 interface SeedData {
   users: SeedUser[];
+  operators: SeedOperator[];
+  teams: SeedTeam[];
 }
 
 export const initialData: SeedData = {
@@ -34,6 +44,28 @@ export const initialData: SeedData = {
       fullName: "Prueba2",
       isActive: true,
       role: "user",
+    },
+  ],
+  operators: [
+    {
+      fullName: "Bryan Lopez",
+    },
+    {
+      fullName: "Ignacio Huerta",
+    },
+    {
+      fullName: "Alexander Leiton",
+    }
+  ],
+  teams: [
+    {
+      title: "Urgencia",
+    },
+    {
+      title: "Uci",
+    },
+    {
+      title: "Uci Pediatrica",
     },
   ],
 };

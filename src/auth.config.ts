@@ -1,43 +1,49 @@
-import NextAuth, { type NextAuthConfig } from "next-auth";
-import { z } from "zod";
-import Credentials from "next-auth/providers/credentials";
-import prisma from "./lib/prisma";
-import bcryptjs from "bcryptjs";
+import NextAuth, { type NextAuthConfig } from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
+import bcryptjs from 'bcryptjs';
+import { z } from 'zod';
+import prisma from './lib/prisma';
 
+const authenticatedRoutes = [
+  '/',
+  "/blueCode",
+  "/greenCode",
+  "/redCode",
+  "/airCode",
+  "/leakCode",
+]
+ 
 export const authConfig: NextAuthConfig = {
   pages: {
-    signIn: "/auth/login",
-    verifyRequest: "/auth/verify-request",
-    newUser: "/auth/register",
+    signIn: '/auth/login',
+    newUser: '/auth/register',
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      // const isLoggedIn = !!auth?.user;
-      // const isOnDashboard = nextUrl.pathname.startsWith("/codePanel/dashboard");
-      // if (isOnDashboard) {
-      //   if (isLoggedIn) return true;
-      //   return false;
-      // } else if (isLoggedIn) {
-      //   return true;
-      // }
+      const isLoggedIn = !!auth?.user;
+      const isOnDashboard = authenticatedRoutes.includes(nextUrl.pathname);
+      if (isOnDashboard) {
+        if (isLoggedIn) return true;
+        return false;
+      } else if (isLoggedIn) {
+        return Response.redirect(new URL('/', nextUrl));
+      }
       return true;
     },
-
-    jwt({ token, user }) {
-      if (user) {
+        jwt({ token, user }) {
+      if ( user ) {
         token.data = user;
       }
 
       return token;
     },
-    session({ session, token }) {
-      session.user = token.data as any;
 
+    session({ session, token, user }) {
+      session.user = token.data as any;
       return session;
     },
   },
-  providers: [
-    Credentials({
+  providers: [Credentials({
       async authorize(credentials) {
         const parsedCredentials = z
           .object({ email: z.string().email(), password: z.string().min(6) })
@@ -63,8 +69,7 @@ export const authConfig: NextAuthConfig = {
 
         return rest;
       },
-    }),
-  ],
+    }),], // Add providers with an empty array for now
 };
 
-export const { signIn, signOut, auth, handlers } = NextAuth(authConfig);
+export const {  signIn, signOut, auth, handlers } = NextAuth( authConfig );

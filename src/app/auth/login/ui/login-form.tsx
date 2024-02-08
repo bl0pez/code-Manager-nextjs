@@ -1,6 +1,4 @@
 "use client";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { useFormState, useFormStatus } from "react-dom";
 
 import { IoMdLogIn } from "react-icons/io";
@@ -9,16 +7,8 @@ import { IoInformationOutline } from "react-icons/io5";
 import { authenticate } from "@/actions/auth/login";
 import { Input } from "@/codePanel/components/input/Input";
 
-export const LoginForm = () => {
+export default function LoginForm() {
   const [state, dispatch] = useFormState(authenticate, undefined);
-
-  // const router = useRouter();
-
-  // useEffect(() => {
-  //   if (state === "Success") {
-  //     router.replace("/");
-  //   }
-  // }, [state, router]);
 
   return (
     <form action={dispatch} className="flex flex-col gap-4">
@@ -29,17 +19,17 @@ export const LoginForm = () => {
         aria-live="polite"
         aria-atomic="true"
       >
-        {/* {state === "Credenciales incorrectas" && (
+        {state === "Credenciales incorrectas" && (
           <div className="flex justify-center h-full border border-red-300 w-full items-center">
             <IoInformationOutline className=" text-red-500" size={20} />
             <p className="text-sm text-red-500">{state}</p>
           </div>
-        )} */}
+        )}
       </div>
       <LoginButton />
     </form>
   );
-};
+}
 
 function LoginButton() {
   const { pending } = useFormStatus();

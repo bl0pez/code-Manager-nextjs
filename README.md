@@ -19,3 +19,7 @@ Este es un proyecto para control y manejo de código de un hospital.
 3. remplazar el archivo `.env.example` por `.env` y llenar las variables de entorno
 4. Levantar el servidor de base de datos con `docker-compose up -d`
 5. Crear deploy de prisma con `npx prisma migrate deploy`
+
+# Comandos:
+
+- Crear migración: `npx prisma migrate dev --name nombre-de-la-migracion`
