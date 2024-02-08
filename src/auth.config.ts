@@ -1,22 +1,23 @@
-import NextAuth, { type NextAuthConfig } from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
-import bcryptjs from 'bcryptjs';
-import { z } from 'zod';
-import prisma from './lib/prisma';
+import NextAuth, { type NextAuthConfig } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import bcryptjs from "bcryptjs";
+import { z } from "zod";
+import prisma from "./lib/prisma";
 
 const authenticatedRoutes = [
-  '/',
+  "/",
   "/blueCode",
   "/greenCode",
   "/redCode",
   "/airCode",
   "/leakCode",
-]
- 
+  "/admin",
+];
+
 export const authConfig: NextAuthConfig = {
   pages: {
-    signIn: '/auth/login',
-    newUser: '/auth/register',
+    signIn: "/auth/login",
+    newUser: "/auth/register",
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
@@ -26,12 +27,12 @@ export const authConfig: NextAuthConfig = {
         if (isLoggedIn) return true;
         return false;
       } else if (isLoggedIn) {
-        return Response.redirect(new URL('/', nextUrl));
+        return Response.redirect(new URL("/", nextUrl));
       }
       return true;
     },
-        jwt({ token, user }) {
-      if ( user ) {
+    jwt({ token, user }) {
+      if (user) {
         token.data = user;
       }
 
@@ -43,7 +44,8 @@ export const authConfig: NextAuthConfig = {
       return session;
     },
   },
-  providers: [Credentials({
+  providers: [
+    Credentials({
       async authorize(credentials) {
         const parsedCredentials = z
           .object({ email: z.string().email(), password: z.string().min(6) })
@@ -69,7 +71,8 @@ export const authConfig: NextAuthConfig = {
 
         return rest;
       },
-    }),], // Add providers with an empty array for now
+    }),
+  ], // Add providers with an empty array for now
 };
 
-export const {  signIn, signOut, auth, handlers } = NextAuth( authConfig );
+export const { signIn, signOut, auth, handlers } = NextAuth(authConfig);

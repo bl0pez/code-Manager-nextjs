@@ -61,7 +61,7 @@ export const Pagination = ({ totalPages }: Props) => {
             <li key={page} className="page-item">
               <Link
                 className={clsx(
-                  "px-3 py-1.5 rounded hover:bg-indigo-700 transition-colors",
+                  "px-3 py-1.5 rounded hover:bg-indigo-700 transition-colors hover:text-white",
                   {
                     "bg-indigo-600 shadow-sm text-white hover:text-white ":
                       page === currentPage,

@@ -11,8 +11,8 @@ import { SidebarMenuItem } from "./SidebarMenuItem";
 import { RiMenu3Fill } from "react-icons/ri";
 import { CiLogout } from "react-icons/ci";
 import { logout } from "@/actions/auth/logout";
-import { ProtectiveRoles } from "@/components/ProtectiveRoles";
 import { RiAdminFill } from "react-icons/ri";
+import { useSession } from "next-auth/react";
 
 const className = "w-6 h-6";
 
@@ -56,6 +56,9 @@ export const Sidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const { data: session } = useSession();
+  const isAdmin = session?.user.role === "admin";
+
   return (
     <>
       <button
@@ -82,14 +85,16 @@ export const Sidebar = () => {
               toggleSidebar={toggleSidebar}
             />
           ))}
-          <ProtectiveRoles roles={["admin"]}>
-            <SidebarMenuItem
-              path="/admin"
-              title="Admin"
-              icon={<RiAdminFill className={className} />}
-              toggleSidebar={toggleSidebar}
-            />
-          </ProtectiveRoles>
+          {isAdmin && (
+            <>
+              <SidebarMenuItem
+                path="/admin"
+                title="Admin"
+                icon={<RiAdminFill className={className} />}
+                toggleSidebar={toggleSidebar}
+              />
+            </>
+          )}
         </nav>
         <button
           onClick={() => logout()}
