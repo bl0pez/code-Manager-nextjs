@@ -1,8 +1,7 @@
-import { getCodeBlueTeams } from "@/actions/codePanel/getCodeBlueTeams";
-import { getOperators } from "@/actions/codePanel/getOperatos";
-import { CreateCodeBlue } from "@/codePanel/components/form/CreateCodeBlue";
+import CreateCodeBlue from "@/codePanel/components/create/CreateCodeBlue";
 import TableCodeBlue from "@/codePanel/components/table/TableCodeBlue";
 import { Title } from "@/components/ui/Title";
+import { Suspense } from "react";
 
 interface Props {
   searchParams: {
@@ -10,19 +9,19 @@ interface Props {
   };
 }
 
-export default async function BlueCodePage({ searchParams }: Props) {
+export default function BlueCodePage({ searchParams }: Props) {
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
-
-  const { teams } = await getCodeBlueTeams();
-  const { operatos } = await getOperators();
-
   return (
     <div>
       <Title title="Código Azul" />
 
       <div className="flex gap-4 flex-wrap">
-        <CreateCodeBlue operatos={operatos} teams={teams} />
-        <TableCodeBlue page={page} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <CreateCodeBlue />
+        </Suspense>
+        <Suspense fallback={<div>Loading...</div>}>
+          <TableCodeBlue page={page} />
+        </Suspense>
       </div>
     </div>
   );
