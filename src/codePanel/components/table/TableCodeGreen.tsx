@@ -1,7 +1,4 @@
-import { getOperators } from "@/actions/codePanel/getOperatos";
 import { Pagination } from "@/components/ui/Pagination";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { getCodeGreen } from "@/actions/codePanel/codeGreen/getCodeGreen";
 
 interface Props {
@@ -23,13 +20,13 @@ const TableCodeGreen = async ({ page }: Props) => {
   });
 
   return (
-    <div className="bg-white border shadow rounded">
-      <div className="h-96 overflow-y-auto">
+    <div className="bg-white shadow rounded flex-1 w-full">
+      <div className="overflow-y-auto h-80">
         <table className="w-full">
-          <thead className="bg-indigo-600 text-white border-b sticky top-0 text-left">
+          <thead className="bg-indigo-600 text-white sticky top-0 text-left">
             <tr>
               {columns.map((column) => (
-                <th key={column} className="capitalize px-3.5 py-2">
+                <th key={column} className="capitalize px-3.5 py-2 min-w-36">
                   {column}
                 </th>
               ))}
@@ -41,9 +38,11 @@ const TableCodeGreen = async ({ page }: Props) => {
                 <td className="px-3.5 py-2">
                   {new Date(code.createdAt).toLocaleString()}
                 </td>
-                <td className="px-3.5 py-2">{code.event}</td>
                 <td className="px-3.5 py-2">{code.location}</td>
-                <td className="px-3.5 py-2">{code.informant}</td>
+                <td className="px-3.5 py-2">{code.event}</td>
+                <td className="px-3.5 py-2">
+                  {code.police === true ? "Si" : "No"}
+                </td>
                 <td className="px-3.5 py-2">{code.informant}</td>
                 <td className="px-3.5 py-2">{code.operator}</td>
               </tr>
@@ -51,8 +50,7 @@ const TableCodeGreen = async ({ page }: Props) => {
           </tbody>
         </table>
       </div>
-      {/* Paginacion */}
-      <div className="flex items-center justify-between p-2 flex-wrap">
+      <div className="flex justify-between flex-wrap px-3.5 py-2 bg-white w-full shadow">
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
@@ -61,7 +59,6 @@ const TableCodeGreen = async ({ page }: Props) => {
         </span>
         <Pagination totalPages={totalPages} />
       </div>
-      <ToastContainer />
     </div>
   );
 };
