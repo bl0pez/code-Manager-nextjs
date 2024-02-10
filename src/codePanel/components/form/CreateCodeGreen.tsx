@@ -1,108 +1,92 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useFormState, useFormStatus } from "react-dom";
 import { toast } from "react-toastify";
 
 import { Operator } from "@prisma/client";
-import { createCodeBlue } from "@/actions/codePanel/codeBlue/createCodeBlue";
 import { SelectOperatos } from "@/components/ui/SelectOperatos";
-import { Input } from "../input/Input";
+
 import { SelectPolice } from "@/components/ui/SelectPolice";
+import { createCodeGreen } from "@/actions/codePanel/codeGreen/createCodeGreen";
+import { useEffect } from "react";
 
 interface Props {
   operatos: Operator[];
 }
 
 export const CreateCodeGreen = ({ operatos }: Props) => {
-  const [createdAt, setCreatedAt] = useState("");
-  const [location, setLocation] = useState("");
-  const [event, setEvent] = useState("");
-  const [police, setPolice] = useState<Boolean>(false);
-  const [informant, setInformant] = useState("");
-  const [operator, setOperator] = useState("");
-  const [optionsOperators, setOptionsOperators] = useState<Operator[]>([]);
+  const [state, dispatch] = useFormState(createCodeGreen, undefined);
 
-  useMemo(() => {
-    setOptionsOperators(operatos);
-  }, [operatos]);
-
-  const onSubmit = async () => {
-    const formData = new FormData();
-    formData.append("createdAt", createdAt);
-    formData.append("location", location);
-    formData.append("operator", operator);
-    formData.append("informant", informant);
-
-    const codeBlue = await createCodeBlue(formData);
-
-    if (!codeBlue.ok) {
-      toast.error(codeBlue.message);
-      return;
+  useEffect(() => {
+    if (state === "Código verde creado correctamente") {
+      toast.success(state);
     }
 
-    setCreatedAt("");
-    setOperator("");
-    setLocation("");
-    setInformant("");
-  };
+    if (state === "Error al crear el código verde") {
+      toast.error(state);
+    }
+
+    if (state === "Debes iniciar sesión para hacer esto") {
+      toast.error(state);
+    }
+
+    if (state === "Todos los campos son requeridos") {
+      toast.error(state);
+    }
+  }, [state]);
 
   return (
     <form
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          onSubmit();
-        }
-      }}
+      className="bg-white shadow-md rounded px-3 py-4 space-y-3"
+      action={dispatch}
     >
-      <td>
-        <Input
-          type="datetime-local"
-          id="createdAt"
-          name="createdAt"
-          value={createdAt}
-          onChange={(e) => setCreatedAt(e.target.value)}
-        />
-      </td>
-      <td>
+      {/* <div className="grid grid-cols-2 gap-2"> */}
+      {/* <Input type="datetime-local" id="createdAt" name="createdAt" />
         <Input
           id="location"
-          onChange={(e) => setLocation(e.target.value)}
           name="location"
-          value={location}
           type="text"
           placeholder="Ubicación"
         />
-      </td>
-      <td>
-        <Input
-          name="event"
-          onChange={(e) => setEvent(e.target.value)}
-          value={event}
-          type="text"
-          placeholder="Detalle del evento"
-        />
-      </td>
-      <td>
-        <SelectPolice
-          value={police}
-          onChange={(e) => setPolice(e.target.value === "Si")}
-        />
-      </td>
-      <td>
+      </div>
+      <div></div>
+      <div>
+        <Input name="event" type="text" placeholder="Detalle del evento" />
+      </div>
+      <div>
+        <SelectPolice name="police" />
+      </div>
+      <div>
         <Input
           name="informant"
-          onChange={(e) => setInformant(e.target.value)}
-          value={informant}
           type="text"
           placeholder="Nombre del funcionario"
         />
-      </td>
-      <td>
-        <SelectOperatos
-          value={operator}
-          operatos={optionsOperators}
-          onChange={(e) => setOperator(e.target.value)}
-        />
-      </td>
+      </div>
+      <div>
+        <SelectOperatos operatos={operatos} />
+      </div> */}
+      <Button />
+      {/* <button
+        type="button"
+        onClick={onSubmit}
+        className="bg-indigo-600 text-white px-4 py-2 rounded-md w-full hover:bg-indigo-700 transition-all"
+      >
+        Crear Código Verde
+      </button> */}
     </form>
   );
 };
+
+function Button() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      className="flex items-center justify-center gap-2 bg-blue-500 text-white rounded-md p-2 hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
+      aria-disabled={pending}
+      disabled={pending}
+    >
+      Crear Código Verde
+    </button>
+  );
+}

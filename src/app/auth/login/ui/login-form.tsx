@@ -5,15 +5,14 @@ import { IoMdLogIn } from "react-icons/io";
 import { IoInformationOutline } from "react-icons/io5";
 
 import { authenticate } from "@/actions/auth/login";
-import { Input } from "@/codePanel/components/input/Input";
 
 export default function LoginForm() {
   const [state, dispatch] = useFormState(authenticate, undefined);
 
   return (
     <form action={dispatch} className="flex flex-col gap-4">
-      <Input type="email" placeholder="Correo electrónico" name="email" />
-      <Input type="password" placeholder="Contraseña" name="password" />
+      <input type="email" placeholder="Correo electrónico" name="email" />
+      <input type="password" placeholder="Contraseña" name="password" />
       <div
         className="flex h-8 items-end space-x-1"
         aria-live="polite"

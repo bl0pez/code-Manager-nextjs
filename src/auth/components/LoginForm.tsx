@@ -1,24 +1,13 @@
 "use client";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { useFormState, useFormStatus } from "react-dom";
 
 import { IoMdLogIn } from "react-icons/io";
-import { IoInformationOutline } from "react-icons/io5";
 
 import { authenticate } from "@/actions/auth/login";
 import { Input } from "@/codePanel/components/input/Input";
 
 export const LoginForm = () => {
   const [state, dispatch] = useFormState(authenticate, undefined);
-
-  // const router = useRouter();
-
-  // useEffect(() => {
-  //   if (state === "Success") {
-  //     router.replace("/");
-  //   }
-  // }, [state, router]);
 
   return (
     <form action={dispatch} className="flex flex-col gap-4">

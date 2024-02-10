@@ -1,28 +1,30 @@
 "use server";
-import { auth } from "@/auth.config";
-import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import prisma from "@/lib/prisma";
 import z from "zod";
+import { auth } from "@/auth.config";
 
 const codeBlueShema = z.object({
   createdAt: z.string().min(2),
   team: z.string().min(2),
   location: z.string().min(2),
   operator: z.string().min(2),
-  officer: z.string().min(2),
+  informant: z.string().min(2),
 });
 
-export const createCodeBlue = async (formData: FormData) => {
+type Props = z.infer<typeof codeBlueShema>;
+
+export const createCodeBlue = async (codeBlueData: Props) => {
   const session = await auth();
 
   if (!session?.user) {
     return {
-      error: "You must be logged in to do this",
+      ok: false,
+      error: "Debes iniciar sesión",
     };
   }
 
-  const data = Object.fromEntries(formData);
-  const codeBlueParsed = codeBlueShema.safeParse(data);
+  const codeBlueParsed = codeBlueShema.safeParse(codeBlueData);
 
   if (!codeBlueParsed.success) {
     return {
@@ -31,20 +33,21 @@ export const createCodeBlue = async (formData: FormData) => {
     };
   }
 
-  const { createdAt, team, location, operator, officer } = codeBlueParsed.data;
+  const { createdAt, team, location, operator, informant } =
+    codeBlueParsed.data;
 
   try {
     await prisma.codeBlue.create({
       data: {
         createdAt: new Date(createdAt),
         team: team,
-        location: location,
+        location: location.toLocaleLowerCase(),
         operator: operator,
-        officer: officer,
+        informant: informant.toLocaleLowerCase(),
       },
     });
 
-    revalidatePath("/codePanel");
+    revalidatePath("/codeBlue");
     return {
       ok: true,
       message: "Código azul creado con éxito",

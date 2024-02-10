@@ -23,7 +23,7 @@ const menuItems = [
     icon: <MdOutlineDashboard className={`text-indigo-600 ${className}`} />,
   },
   {
-    path: "/blueCode",
+    path: "/codeBlue",
     title: "Código Azul",
     icon: <TbMedicalCross className={`text-blue-600 ${className}`} />,
   },

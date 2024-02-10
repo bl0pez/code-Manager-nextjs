@@ -2,7 +2,6 @@ import { getOperators } from "@/actions/codePanel/getOperatos";
 import { Pagination } from "@/components/ui/Pagination";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { CreateCodeGreen } from "../form/CreateCodeGreen";
 import { getCodeGreen } from "@/actions/codePanel/codeGreen/getCodeGreen";
 
 interface Props {
@@ -23,23 +22,20 @@ const TableCodeGreen = async ({ page }: Props) => {
     page,
   });
 
-  const { operatos } = await getOperators();
-
   return (
     <div className="bg-white border shadow rounded">
       <div className="h-96 overflow-y-auto">
-        <table className="w-full border-separate border-spacing-2">
+        <table className="w-full">
           <thead className="bg-indigo-600 text-white border-b sticky top-0 text-left">
             <tr>
               {columns.map((column) => (
-                <th key={column} className="capitalize px-3.5 py-2 min-w-56">
+                <th key={column} className="capitalize px-3.5 py-2">
                   {column}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            <CreateCodeGreen operatos={operatos} />
             {codeGreen.map((code) => (
               <tr key={code.id}>
                 <td className="px-3.5 py-2">
@@ -47,6 +43,7 @@ const TableCodeGreen = async ({ page }: Props) => {
                 </td>
                 <td className="px-3.5 py-2">{code.event}</td>
                 <td className="px-3.5 py-2">{code.location}</td>
+                <td className="px-3.5 py-2">{code.informant}</td>
                 <td className="px-3.5 py-2">{code.informant}</td>
                 <td className="px-3.5 py-2">{code.operator}</td>
               </tr>

@@ -13,7 +13,7 @@ export const SelectTeamCodeBlue = ({ value, onChange, teams }: Props) => {
       onChange={onChange}
       name="team"
       id="team"
-      className="border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-600 border w-full"
+      className="border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-indigo-600 border"
     >
       <option value="" disabled>
         Selecciona un equipo

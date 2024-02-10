@@ -1,110 +1,154 @@
 "use client";
-import { useMemo, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Operator, Team } from "@prisma/client";
 import { createCodeBlue } from "@/actions/codePanel/codeBlue/createCodeBlue";
-import { SelectOperatos } from "@/components/ui/SelectOperatos";
-import { SelectTeamCodeBlue } from "@/components/ui/SelectTeamCodeBlue";
-import { Input } from "../input/Input";
+import { toast } from "react-toastify";
+import { useFormStatus } from "react-dom";
+import { useState } from "react";
 
 interface Props {
   teams: Team[];
   operatos: Operator[];
 }
 
+enum TeamCodeBlue {
+  Uci = "Uci",
+  Urgencia = "Urgencia",
+  UciPediatrica = "Uci Pediatrica",
+}
+
+enum OperatorCodeBlue {
+  Operator1 = "Alexander ",
+  Operator2 = "Bryan Lopez",
+  Operator3 = "Ignacio Huerta",
+}
+
+type FormInputs = {
+  createdAt: string;
+  informant: string;
+  location: string;
+  operator: OperatorCodeBlue;
+  team: TeamCodeBlue;
+};
+
 export const CreateCodeBlue = ({ operatos, teams }: Props) => {
-  const [team, setTeam] = useState("");
-  const [operator, setOperator] = useState("");
-  const [createdAt, setCreatedAt] = useState("");
-  const [location, setLocation] = useState("");
-  const [officer, setOfficer] = useState("");
-  const [optionsTeams, setOptionsTeams] = useState<Team[]>([]);
-  const [optionsOperators, setOptionsOperators] = useState<Operator[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  useMemo(() => {
-    setOptionsTeams(teams);
-  }, [teams]);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormInputs>();
 
-  useMemo(() => {
-    setOptionsOperators(operatos);
-  }, [operatos]);
+  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    const { createdAt, informant, location, operator, team } = data;
 
-  const onSubmit = async () => {
-    const formData = new FormData();
-    formData.append("createdAt", createdAt);
-    formData.append("team", team);
-    formData.append("location", location);
-    formData.append("operator", operator);
-    formData.append("officer", officer);
+    const resp = await createCodeBlue({
+      createdAt,
+      informant,
+      location,
+      operator,
+      team,
+    });
 
-    const codeBlue = await createCodeBlue(formData);
-
-    if (!codeBlue.ok) {
-      toast.error(codeBlue.message);
-      return;
+    if (!resp.ok) {
+      return toast.error(resp.message);
+    } else {
+      reset();
+      toast.success(resp.message);
     }
 
-    setCreatedAt("");
-    setTeam("");
-    setOperator("");
-    setLocation("");
-    setOfficer("");
+    setIsLoading(false);
   };
 
   return (
-    <tr
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          onSubmit();
-        }
-      }}
-    >
-      <td>
-        <div>
-          <Input
-            type="datetime-local"
+    <div className="flex justify-center">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white px-3 py-5 shadow md:gap-3 md:grid md:grid-cols-2"
+      >
+        <div className="space-y-1 flex flex-col">
+          <label htmlFor="createdAt" className="text-gray-600 font-semibold">
+            Fecha y hora
+          </label>
+          <input
             id="createdAt"
-            name="createdAt"
-            value={createdAt}
-            onChange={(e) => setCreatedAt(e.target.value)}
+            className={errors.createdAt && "border-red-500"}
+            type="datetime-local"
+            {...register("createdAt", { required: true })}
           />
         </div>
-      </td>
-      <td>
-        <SelectTeamCodeBlue
-          value={team}
-          teams={optionsTeams}
-          onChange={(e) => setTeam(e.target.value)}
-        />
-      </td>
-      <td>
-        <Input
-          id="location"
-          onChange={(e) => setLocation(e.target.value)}
-          name="location"
-          value={location}
-          type="text"
-          placeholder="Ubicación"
-        />
-      </td>
-      <td>
-        <Input
-          name="officer"
-          onChange={(e) => setOfficer(e.target.value)}
-          value={officer}
-          type="text"
-          placeholder="Nombre funcionario/a"
-        />
-      </td>
-      <td>
-        <SelectOperatos
-          value={operator}
-          operatos={optionsOperators}
-          onChange={(e) => setOperator(e.target.value)}
-        />
-      </td>
-    </tr>
+        <div className="space-y-1 flex flex-col">
+          <label htmlFor="team" className="text-gray-600 font-semibold">
+            Equipo
+          </label>
+          <select
+            id="team"
+            className={errors.team && "border-red-500"}
+            {...register("team", { required: true })}
+          >
+            {teams.map((team) => (
+              <option key={team.id} value={team.title}>
+                {team.title}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="space-y-1 flex flex-col">
+          <label htmlFor="location" className="text-gray-600 font-semibold">
+            Ubicación
+          </label>
+          <input
+            id="location"
+            className={errors.location && "border-red-500"}
+            {...register("location", { required: true })}
+          />
+        </div>
+        <div className="space-y-1 flex flex-col">
+          <label htmlFor="informant" className="text-gray-600 font-semibold">
+            Funcionario/a
+          </label>
+          <input
+            id="informant"
+            className={errors.informant && "border-red-500"}
+            {...register("informant", { required: true })}
+          />
+        </div>
+        <div className="space-y-1 flex flex-col">
+          <label htmlFor="operator" className="text-gray-600 font-semibold">
+            Operador
+          </label>
+          <select
+            id="operator"
+            className={errors.operator && "border-red-500"}
+            {...register("operator", { required: true })}
+          >
+            {operatos.map((operator) => (
+              <option key={operator.id} value={operator.fullName}>
+                {operator.fullName}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="md:col-span-2">
+          <button
+            className="bg-indigo-600 text-white py-2 rounded-md w-full hover:bg-indigo-700 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed flex justify-center items-center"
+            disabled={isLoading}
+            type="submit"
+            title="Crear código azul"
+          >
+            {isLoading ? (
+              <div
+                className="w-5 h-5 rounded-full animate-spin
+                    border-4 border-solid border-indigo-700 border-t-transparent"
+              ></div>
+            ) : (
+              "Crear"
+            )}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
