@@ -42,6 +42,8 @@ export const CreateCodeBlue = ({ operatos, teams }: Props) => {
   } = useForm<FormInputs>();
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    setIsLoading(true);
+
     const { createdAt, informant, location, operator, team } = data;
 
     const resp = await createCodeBlue({
