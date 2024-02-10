@@ -1,18 +1,18 @@
 "use client";
-import { useState } from "react";
-import { MdClose } from "react-icons/md";
+import { useSession } from "next-auth/react";
 import { MdOutlineDashboard } from "react-icons/md";
 import { TbMedicalCross } from "react-icons/tb";
 import { IoShieldOutline } from "react-icons/io5";
 import { FaFire } from "react-icons/fa";
 import { FaHelicopter } from "react-icons/fa";
 import { FaRunning } from "react-icons/fa";
-import { SidebarMenuItem } from "./SidebarMenuItem";
-import { RiMenu3Fill } from "react-icons/ri";
-import { CiLogout } from "react-icons/ci";
-import { logout } from "@/actions/auth/logout";
 import { RiAdminFill } from "react-icons/ri";
-import { useSession } from "next-auth/react";
+import clsx from "clsx";
+
+import { SidebarMenuItem } from "./SidebarMenuItem";
+import { SidebarButton } from "./SidebarButton";
+import { LogoutButton } from "./LogoutButton";
+import { useUiStore } from "@/store/ui/ui-store";
 
 const className = "w-6 h-6";
 
@@ -20,89 +20,80 @@ const menuItems = [
   {
     path: "/",
     title: "Dashboard",
-    icon: <MdOutlineDashboard className={className} />,
+    icon: <MdOutlineDashboard className={`text-indigo-600 ${className}`} />,
   },
   {
     path: "/blueCode",
     title: "Código Azul",
-    icon: <TbMedicalCross className={className} />,
+    icon: <TbMedicalCross className={`text-blue-600 ${className}`} />,
   },
   {
     path: "/codeGreen",
     title: "Código Verde",
-    icon: <IoShieldOutline className={className} />,
+    icon: <IoShieldOutline className={`text-green-600 ${className}`} />,
   },
   {
     path: "/redCode",
     title: "Código Rojo",
-    icon: <FaFire className={className} />,
+    icon: <FaFire className={`text-red-600 ${className}`} />,
   },
   {
     path: "/airCode",
     title: "Código Aéreo",
-    icon: <FaHelicopter className={className} />,
+    icon: <FaHelicopter className={`text-cyan-600 ${className}`} />,
   },
   {
     path: "/leakCode",
     title: "Código Fuga",
-    icon: <FaRunning className={className} />,
+    icon: <FaRunning className={`text-yellow-600 ${className}`} />,
   },
 ];
 
 export const Sidebar = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  const isSideMenuOpen = useUiStore((state) => state.isSideMenuOpen);
 
   const { data: session } = useSession();
   const isAdmin = session?.user.role === "admin";
 
   return (
     <>
-      <button
-        onClick={toggleSidebar}
-        className="lg:hidden absolute right-4 bottom-4 bg-indigo-600 p-3 text-white rounded-full"
-      >
-        {isSidebarOpen ? (
-          <MdClose className="w-6 h-6" />
-        ) : (
-          <RiMenu3Fill className="w-6 h-6" />
-        )}
-      </button>
+      <SidebarButton />
       <aside
-        className={`h-full p-3 text-center flex flex-col shadow-lg w-3/4  md:w-2/5 lg:w-full absolute lg:static bg-white ${
-          isSidebarOpen ? "-left-0" : "-left-full"
-        } transition-all duration-300 z-50`}
+        className={clsx("p-2 shadow-lg w-14 bg-white transition-all", {
+          "w-60": isSideMenuOpen,
+        })}
       >
-        <span className="font-bold py-4">Code Manager</span>
-        <nav className="flex-1 space-y-2">
-          {menuItems.map((item) => (
-            <SidebarMenuItem
-              key={item.path}
-              {...item}
-              toggleSidebar={toggleSidebar}
-            />
-          ))}
-          {isAdmin && (
-            <>
-              <SidebarMenuItem
-                path="/admin"
-                title="Admin"
-                icon={<RiAdminFill className={className} />}
-                toggleSidebar={toggleSidebar}
-              />
-            </>
-          )}
-        </nav>
-        <button
-          onClick={() => logout()}
-          className="flex items-center gap-2 hover:bg-red-500 p-2 text-gray-400 hover:text-white w-full rounded-lg transition-colors font-semibold"
-        >
-          <CiLogout className="w-6 h-6" />
-          Logout
-        </button>
+        <div className="w-full overflow-hidden flex flex-col h-full">
+          <div className="w-full flex justify-center">
+            <span
+              className={clsx(
+                "font-bold py-4 block text-center whitespace-nowrap transition-all",
+                {
+                  "opacity-0": !isSideMenuOpen,
+                }
+              )}
+            >
+              Code Manager
+            </span>
+          </div>
+          <nav className="flex-1 space-y-2">
+            {menuItems.map((item) => (
+              <SidebarMenuItem key={item.path} {...item} />
+            ))}
+            {isAdmin && (
+              <>
+                <SidebarMenuItem
+                  path="/admin"
+                  title="Admin"
+                  icon={
+                    <RiAdminFill className={`text-violet-600 ${className}`} />
+                  }
+                />
+              </>
+            )}
+          </nav>
+          <LogoutButton />
+        </div>
       </aside>
     </>
   );

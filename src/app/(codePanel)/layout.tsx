@@ -6,7 +6,7 @@ export default async function CodePanelLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-6">
+    <div className="h-screen flex">
       {/* Sidebar */}
       <Sidebar />
       {/* Main Content */}
