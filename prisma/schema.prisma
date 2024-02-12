@@ -26,6 +26,16 @@ model CodeGreen {
   operator  String
 }
 
+model CodeRed {
+  id                     String    @id @default(uuid())
+  createdAt              DateTime
+  location               String
+  informant              String
+  operator               String
+  firefightersCallTime   DateTime?
+  COERadialCommunication Boolean
+}
+
 model Operator {
   id       String @id @default(uuid())
   fullName String
