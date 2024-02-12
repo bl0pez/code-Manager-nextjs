@@ -1,11 +1,17 @@
 import { Suspense } from "react";
-import TableCodeGreen from "@/codePanel/components/table/TableCodeGreen";
-import { Title } from "@/components/ui/Title";
+
 import CreateCodeGreen from "@/codePanel/components/create/CreateCodeGreen";
+import Modal from "@/codePanel/components/modal/Modal";
+import TableCodeGreen from "@/codePanel/components/table/TableCodeGreen";
+
+import { ButtonOpenModal } from "@/codePanel/components/modal/ButtonOpenModal";
+import { TableSkeleton } from "@/components/skeleton/TableSkeleton";
+import { Title } from "@/components/ui/Title";
 
 interface Props {
   searchParams: {
     page?: string;
+    showModal?: string;
   };
 }
 
@@ -16,14 +22,17 @@ export default function CodeGreenPage({ searchParams }: Props) {
     <div>
       <Title title="Código Verde" />
 
-      <div className="flex gap-4 flex-wrap">
-        <Suspense fallback={<div>Loading...</div>}>
+      <ButtonOpenModal />
+
+      <Suspense fallback={<TableSkeleton />}>
+        <TableCodeGreen page={page} />
+      </Suspense>
+
+      {searchParams.showModal && (
+        <Modal>
           <CreateCodeGreen />
-        </Suspense>
-        <Suspense fallback={<div>Loading...</div>}>
-          <TableCodeGreen page={page} />
-        </Suspense>
-      </div>
+        </Modal>
+      )}
     </div>
   );
 }

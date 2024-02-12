@@ -1,11 +1,16 @@
-import CreateCodeBlue from "@/codePanel/components/create/CreateCodeBlue";
-import TableCodeBlue from "@/codePanel/components/table/TableCodeBlue";
-import { Title } from "@/components/ui/Title";
 import { Suspense } from "react";
+
+import Modal from "@/codePanel/components/modal/Modal";
+import TableCodeBlue from "@/codePanel/components/table/TableCodeBlue";
+import CreateCodeBlue from "@/codePanel/components/create/CreateCodeBlue";
+import { ButtonOpenModal } from "@/codePanel/components/modal/ButtonOpenModal";
+import { Title } from "@/components/ui/Title";
+import { TableSkeleton } from "@/components/skeleton/TableSkeleton";
 
 interface Props {
   searchParams: {
     page?: string;
+    showModal?: string;
   };
 }
 
@@ -15,14 +20,17 @@ export default function BlueCodePage({ searchParams }: Props) {
     <div>
       <Title title="Código Azul" />
 
-      <div className="flex gap-4 flex-wrap">
-        <Suspense fallback={<div>Loading...</div>}>
+      <ButtonOpenModal />
+
+      <Suspense fallback={<TableSkeleton />}>
+        <TableCodeBlue page={page} />
+      </Suspense>
+
+      {searchParams.showModal && (
+        <Modal>
           <CreateCodeBlue />
-        </Suspense>
-        <Suspense fallback={<div>Loading...</div>}>
-          <TableCodeBlue page={page} />
-        </Suspense>
-      </div>
+        </Modal>
+      )}
     </div>
   );
 }
