@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { IoMdLogIn } from "react-icons/io";
 import { MdErrorOutline } from "react-icons/md";
 
-import { type SubmitHandler, useForm } from "react-hook-form";
 import { authenticate } from "@/actions/auth/login";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 
 type FormInputs = {
   email: string;
@@ -81,7 +81,7 @@ export default function LoginForm() {
         )}
       </div>
       <button
-        className="bg-indigo-600 text-white py-2 rounded-md w-full hover:bg-indigo-700 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed flex justify-center items-center"
+        className="bg-indigo-600 h-7 text-white rounded-md w-full hover:bg-indigo-700 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed flex justify-center items-center"
         disabled={isLoading}
         type="submit"
         title="Crear código azul"
@@ -92,25 +92,11 @@ export default function LoginForm() {
                 border-4 border-solid border-indigo-700 border-t-transparent"
           ></div>
         ) : (
-          <span className="flex items-center gap-4 text-xl">
-            Crear <IoMdLogIn size={20} />
+          <span className="flex items-center gap-4 text-base">
+            Iniciar sesión <IoMdLogIn size={20} />
           </span>
         )}
       </button>
     </form>
   );
 }
-
-// function LoginButton() {
-//   const { pending } = useFormStatus();
-
-//   return (
-//     <button
-//       className="flex items-center justify-center gap-2 bg-blue-500 text-white rounded-md p-2 hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
-//       aria-disabled={pending}
-//       disabled={pending}
-//     >
-//       Iniciar sesión <IoMdLogIn size={20} />
-//     </button>
-//   );
-// }
