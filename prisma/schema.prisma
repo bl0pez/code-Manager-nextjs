@@ -36,6 +36,15 @@ model CodeRed {
   COERadialCommunication Boolean
 }
 
+model CodeAir {
+  id               String   @id @default(uuid())
+  createdAt        DateTime
+  location         String
+  emergencyDetails String?
+  informant        String
+  operator         String
+}
+
 model Operator {
   id       String @id @default(uuid())
   fullName String
