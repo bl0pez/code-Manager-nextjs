@@ -9,7 +9,7 @@ import { Suspense } from "react";
 interface Props {
   searchParams: {
     page?: string;
-    showModal?: boolean;
+    showModal?: string;
   };
 }
 
