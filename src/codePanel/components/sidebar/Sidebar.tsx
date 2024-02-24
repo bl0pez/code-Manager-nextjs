@@ -1,12 +1,10 @@
 "use client";
-import { useSession } from "next-auth/react";
 import { MdOutlineDashboard } from "react-icons/md";
 import { TbMedicalCross } from "react-icons/tb";
 import { IoShieldOutline } from "react-icons/io5";
 import { FaFire } from "react-icons/fa";
 import { FaHelicopter } from "react-icons/fa";
 import { FaRunning } from "react-icons/fa";
-import { RiAdminFill } from "react-icons/ri";
 import clsx from "clsx";
 
 import { SidebarMenuItem } from "./SidebarMenuItem";
@@ -51,10 +49,6 @@ const menuItems = [
 
 export const Sidebar = () => {
   const isSideMenuOpen = useUiStore((state) => state.isSideMenuOpen);
-
-  const { data: session } = useSession();
-  const isAdmin = session?.user.role === "admin";
-
   return (
     <>
       <SidebarButton />
@@ -80,17 +74,6 @@ export const Sidebar = () => {
             {menuItems.map((item) => (
               <SidebarMenuItem key={item.path} {...item} />
             ))}
-            {isAdmin && (
-              <>
-                <SidebarMenuItem
-                  path="/admin"
-                  title="Admin"
-                  icon={
-                    <RiAdminFill className={`text-violet-600 ${className}`} />
-                  }
-                />
-              </>
-            )}
           </nav>
           <LogoutButton />
         </div>
