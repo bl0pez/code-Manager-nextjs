@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@/components/ui/button";
+import { Pencil2Icon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
@@ -13,11 +15,10 @@ export const ButtonOpenModal = () => {
   };
 
   return (
-    <Link
-      href={createUrl()}
-      className="bg-indigo-600 text-white px-3 py-1.5 rounded-md hover:bg-indigo-700 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed justify-center items-cente inline-block mb-3"
-    >
-      Agregar
-    </Link>
+    <Button asChild>
+      <Link href={createUrl()}>
+        <Pencil2Icon className="mr-2 size-5" /> Agregar
+      </Link>
+    </Button>
   );
 };

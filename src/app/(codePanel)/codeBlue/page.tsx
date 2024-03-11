@@ -6,6 +6,8 @@ import CreateCodeBlue from "@/codePanel/components/create/CreateCodeBlue";
 import { ButtonOpenModal } from "@/codePanel/components/modal/ButtonOpenModal";
 import { Title } from "@/components/ui/Title";
 import { TableSkeleton } from "@/components/skeleton/TableSkeleton";
+import { Button } from "@/components/ui/button";
+import { DownloadIcon } from "@radix-ui/react-icons";
 
 interface Props {
   searchParams: {
@@ -20,7 +22,14 @@ export default function BlueCodePage({ searchParams }: Props) {
     <div>
       <Title title="Código Azul" />
 
-      <ButtonOpenModal />
+      <div className="space-x-3 py-4">
+        <ButtonOpenModal />
+
+        <Button>
+          <DownloadIcon className="mr-2 size-5" />
+          Descargar
+        </Button>
+      </div>
 
       <Suspense fallback={<TableSkeleton />}>
         <TableCodeBlue page={page} />

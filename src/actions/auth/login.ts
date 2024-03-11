@@ -1,56 +1,26 @@
 "use server";
-
 import { AuthError } from "next-auth";
-import { signIn } from "@/auth.config";
-import { z } from "zod";
+import { signIn } from "@/auth";
+import { LoginValues } from "@/schema";
 
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(5),
-});
-
-type Props = z.infer<typeof loginSchema>;
-
-export async function authenticate(loginData: Props) {
-  const loginParsed = loginSchema.safeParse(loginData);
-
-  if (!loginParsed.success) {
-    return {
-      ok: false,
-      message: "Todos los campos son requeridos y el correo debe ser válido",
-    };
-  }
-
+export const login = async (values: LoginValues) => {
+  const formData = new FormData();
+  formData.append("email", values.email);
+  formData.append("password", values.password);
   try {
-    await signIn("credentials", {
-      ...loginParsed.data,
-      redirect: false,
-    });
-    
-    return {
-      ok: true,
-      message: "Inicio de sesión exitoso",
-    };
+    await signIn("credentials", Object.fromEntries(formData));
   } catch (error) {
-
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
           return {
-            ok: false,
-            message: "Credenciales inválidas",
+            error: "Credenciales incorrectas",
           };
         default:
-          return {
-            ok: false,
-            message: "Error desconocido",
-          };
+          return { error: "Error desconocido" };
       }
     }
 
-    return {
-      ok: false,
-      message: "Error desconocido",
-    };
+    throw error;
   }
-}
+};

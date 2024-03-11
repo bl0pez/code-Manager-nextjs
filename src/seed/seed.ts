@@ -55,7 +55,7 @@ export const initialData: SeedData = {
     },
     {
       fullName: "Alexander Leiton",
-    }
+    },
   ],
   teams: [
     {

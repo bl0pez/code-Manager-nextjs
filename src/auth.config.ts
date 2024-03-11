@@ -1,21 +1,12 @@
-import NextAuth, { type NextAuthConfig } from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import bcryptjs from "bcryptjs";
-import { z } from "zod";
-import prisma from "./lib/prisma";
+import type { NextAuthConfig } from "next-auth";
+import {
+  DEFAULT_LOGIN_REDIRECT,
+  apiAuthPrefix,
+  authRoutes,
+  publicRoutes,
+} from "./routes";
 
-const authenticatedRoutes = [
-  "/",
-  "/codeBlue",
-  "/codeGreen",
-  "/redCode",
-  "/airCode",
-  "/leakCode",
-  "/admin/users",
-  "/admin/operators",
-];
-
-export const authConfig: NextAuthConfig = {
+export const authConfig = {
   pages: {
     signIn: "/auth/login",
     newUser: "/auth/register",
@@ -23,57 +14,46 @@ export const authConfig: NextAuthConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isOnDashboard = authenticatedRoutes.includes(nextUrl.pathname);
-      if (isOnDashboard) {
-        if (isLoggedIn) return true;
-        return false;
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL("/", nextUrl));
+
+      const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+      const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+      const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+
+      if (isApiAuthRoute) return true;
+
+      if (isAuthRoute) {
+        if (isLoggedIn) {
+          return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+        }
+        return true;
       }
+
+      if (!isLoggedIn && !isPublicRoute) {
+        let callbackUrl = nextUrl.pathname;
+        if (nextUrl.search) {
+          callbackUrl += nextUrl.search;
+        }
+
+        const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+
+        return Response.redirect(
+          new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
+        );
+      }
+
       return true;
     },
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
       if (user) {
         token.data = user;
       }
 
       return token;
     },
-
-    session({ session, token, user }) {
+    session({ session, token }) {
       session.user = token.data as any;
       return session;
     },
   },
-  providers: [
-    Credentials({
-      async authorize(credentials) {
-        const parsedCredentials = z
-          .object({ email: z.string().email(), password: z.string().min(5) })
-          .safeParse(credentials);
-
-        if (!parsedCredentials.success) return null;
-
-        const { email, password } = parsedCredentials.data;
-
-        const user = await prisma.user.findUnique({
-          where: {
-            email: email.toLocaleLowerCase(),
-          },
-        });
-
-        if (!user) return null;
-
-        if (!user.isActive) return null;
-
-        if (!bcryptjs.compareSync(password, user.password)) return null;
-
-        const { password: _, ...rest } = user;
-
-        return rest;
-      },
-    }),
-  ], // Add providers with an empty array for now
-};
-
-export const { signIn, signOut, auth, handlers } = NextAuth(authConfig);
+  providers: [], // Add providers with an empty array for now
+} satisfies NextAuthConfig;
