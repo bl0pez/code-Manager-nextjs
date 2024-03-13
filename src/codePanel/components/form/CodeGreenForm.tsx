@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { createCodeGreen } from "@/actions/codePanel/codeGreen/createCodeGreen";
 import { useRouter } from "next/navigation";
 import { InputDate } from "@/components/InputDate";
+import { SelectOperator } from "@/components/SelectOperator";
 
 interface Props {
   operatos: Operator[];
@@ -50,14 +51,13 @@ export const CodeGreenForm = ({ operatos }: Props) => {
   const onSubmit = async (data: CodeGreenValues) => {
     const response = await createCodeGreen(data);
 
-    form.reset();
     if (response.error) {
       toast.error(response.error);
       return;
     }
 
+    form.reset();
     toast.success(response.success);
-    route.refresh();
   };
 
   return (
@@ -139,22 +139,12 @@ export const CodeGreenForm = ({ operatos }: Props) => {
             control={form.control}
             name="operator"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Operador</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecciona un operador" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {operatos.map((operator) => (
-                      <SelectItem key={operator.id} value={operator.fullName}>
-                        {operator.fullName}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                  <FormMessage />
-                </Select>
-              </FormItem>
+              <SelectOperator
+                operators={operatos}
+                onValueChange={field.onChange}
+                value={field.value}
+                name={field.name}
+              />
             )}
           />
         </div>

@@ -1,61 +1,33 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import prisma from "@/lib/prisma";
-import z from "zod";
-import { auth } from "@/auth";
+import { CodeBlueSchema, CodeBlueValues } from "@/schema";
+import { isRoleValid } from "@/lib/auth";
 
-const codeBlueShema = z.object({
-  createdAt: z.string().min(2),
-  team: z.string().min(2),
-  location: z.string().min(2),
-  operator: z.string().min(2),
-  informant: z.string().min(2),
-});
+export const createCodeBlue = async (codeBlueVelues: CodeBlueValues) => {
+  const roleValid = await isRoleValid();
 
-type Props = z.infer<typeof codeBlueShema>;
-
-export const createCodeBlue = async (codeBlueData: Props) => {
-  const session = await auth();
-
-  if (!session?.user) {
+  if (roleValid) {
     return {
-      ok: false,
-      error: "Debes iniciar sesión",
+      error: roleValid.error,
     };
   }
 
-  const codeBlueParsed = codeBlueShema.safeParse(codeBlueData);
+  const validatedFields = CodeBlueSchema.safeParse(codeBlueVelues);
 
-  if (!codeBlueParsed.success) {
+  if (!validatedFields.success) {
     return {
-      ok: false,
-      message: "Todos los campos son requeridos",
+      error: validatedFields.error.errors[0].message,
     };
   }
-
-  const { createdAt, team, location, operator, informant } =
-    codeBlueParsed.data;
 
   try {
-    await prisma.codeBlue.create({
-      data: {
-        createdAt: new Date(createdAt),
-        team: team,
-        location: location.toLocaleLowerCase(),
-        operator: operator,
-        informant: informant.toLocaleLowerCase(),
-      },
-    });
-
     revalidatePath("/codeBlue");
     return {
-      ok: true,
-      message: "Código azul creado con éxito",
+      success: "Código azul creado correctamente",
     };
   } catch (error) {
     return {
-      ok: false,
-      message: "Error al crear el código azul",
+      error: "Error desconocido al crear el código azul",
     };
   }
 };

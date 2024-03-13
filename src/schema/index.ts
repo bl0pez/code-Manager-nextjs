@@ -10,6 +10,10 @@ const validations = {
   operator: z.string().min(4, {
     message: "Selecciona un operador válido",
   }),
+  createdAt: z.coerce.date({
+    required_error: "Ingresa una fecha y hora válida",
+    invalid_type_error: "Ingresa una fecha y hora válida",
+  }),
 };
 
 export const LoginSchema = z.object({
@@ -20,7 +24,7 @@ export const LoginSchema = z.object({
 export interface LoginValues extends z.infer<typeof LoginSchema> {}
 
 export const CodeBlueSchema = z.object({
-  createdAt: z.string(),
+  createdAt: validations.createdAt,
   informant: z.string(),
   location: z.string(),
   operator: validations.operator,
@@ -32,7 +36,7 @@ export const CodeBlueSchema = z.object({
 export interface CodeBlueValues extends z.infer<typeof CodeBlueSchema> {}
 
 export const CodeGreenSchema = z.object({
-  createdAt: z.coerce.date(),
+  createdAt: validations.createdAt,
   event: z.string(),
   informant: z.string(),
   location: z.string(),

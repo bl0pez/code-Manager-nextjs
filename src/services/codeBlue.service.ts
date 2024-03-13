@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { PaginationOptions } from "./interface";
+import { CodeBlueValues } from "@/schema";
 
 export class CodeBlueService {
   public static async findAllCodeBlue({
@@ -22,5 +23,18 @@ export class CodeBlueService {
       codeBlue: codeBlue,
       currentPage: page,
     };
+  }
+
+  public static async create(values: CodeBlueValues) {
+    try {
+      const createCodeBlue = await prisma.codeBlue.create({
+        data: {
+          ...values,
+        },
+      });
+      return createCodeBlue;
+    } catch (error) {
+      throw new Error("Error desconocido al crear el código verde");
+    }
   }
 }
