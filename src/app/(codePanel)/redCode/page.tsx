@@ -1,6 +1,6 @@
 import CreateCodeRed from "@/codePanel/components/create/CreateCodeRed";
 import { ButtonOpenModal } from "@/codePanel/components/modal/ButtonOpenModal";
-import Modal from "@/codePanel/components/modal/Modal";
+import Modal from "@/codePanel/components/modal/_Modal";
 import TableCodeRed from "@/codePanel/components/table/TableCodeRed";
 import { TableSkeleton } from "@/components/skeleton/TableSkeleton";
 import { Title } from "@/components/ui/Title";

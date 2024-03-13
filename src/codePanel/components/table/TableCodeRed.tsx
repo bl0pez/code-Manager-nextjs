@@ -1,5 +1,5 @@
 import { getCodeRed } from "@/actions/codePanel/codeRed/getCodeRed";
-import { Pagination } from "@/components/ui/Pagination";
+import { Pagination } from "@/components/Pagination";
 
 interface Props {
   page: number;

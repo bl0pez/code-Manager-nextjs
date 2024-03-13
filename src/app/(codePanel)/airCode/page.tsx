@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
 import CreateCodeAir from "@/codePanel/components/create/CreateCodeAir";
-import Modal from "@/codePanel/components/modal/Modal";
+import Modal from "@/codePanel/components/modal/_Modal";
 import { ButtonOpenModal } from "@/codePanel/components/modal/ButtonOpenModal";
 import { TableSkeleton } from "@/components/skeleton/TableSkeleton";
 import { Title } from "@/components/ui/Title";

@@ -1,157 +1,208 @@
 "use client";
-import { useState } from "react";
-import { type SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Operator } from "@prisma/client";
 import { toast } from "react-toastify";
+import { CodeGreenSchema, CodeGreenValues } from "@/schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { createCodeGreen } from "@/actions/codePanel/codeGreen/createCodeGreen";
+import { useRouter } from "next/navigation";
+import { InputDate } from "@/components/InputDate";
 
 interface Props {
   operatos: Operator[];
 }
 
-enum Police {
-  "true" = "Si",
-  "false" = "No",
-}
-
-type FormInputs = {
-  createdAt: Date;
-  location: string;
-  event: string;
-  police: string;
-  informant: string;
-  operator: string;
-};
-
 export const CodeGreenForm = ({ operatos }: Props) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const route = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormInputs>();
+  const form = useForm<CodeGreenValues>({
+    resolver: zodResolver(CodeGreenSchema),
+    defaultValues: {
+      createdAt: undefined,
+      event: "",
+      informant: "",
+      location: "",
+      operator: "",
+      police: undefined,
+    },
+  });
 
-  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    setIsLoading(true);
+  const onSubmit = async (data: CodeGreenValues) => {
+    const response = await createCodeGreen(data);
 
-    const { createdAt, event, informant, location, operator, police } = data;
-
-    const resp = await createCodeGreen({
-      createdAt,
-      event,
-      informant,
-      location,
-      operator,
-      police: police === "true" ? true : false,
-    });
-
-    if (!resp.ok) {
-      toast.error(resp.message);
-    } else {
-      reset();
-      toast.success(resp.message);
+    form.reset();
+    if (response.error) {
+      toast.error(response.error);
+      return;
     }
 
-    setIsLoading(false);
+    toast.success(response.success);
+    route.refresh();
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="bg-white px-3 py-5 shadow md:gap-3 md:grid md:grid-cols-2"
-    >
-      <div className="space-y-1 flex flex-col">
-        <label htmlFor="createdAt" className="text-gray-600 font-semibold">
-          Fecha y hora
-        </label>
-        <input
-          id="createdAt"
-          className={errors.createdAt && "border-red-500"}
-          type="datetime-local"
-          {...register("createdAt", { required: true })}
-        />
-      </div>
-      <div className="space-y-1 flex flex-col">
-        <label htmlFor="location" className="text-gray-600 font-semibold">
-          Ubicación
-        </label>
-        <input
-          id="location"
-          className={errors.location && "border-red-500"}
-          {...register("location", { required: true })}
-        />
-      </div>
-      <div className="space-y-1 flex flex-col">
-        <label htmlFor="event" className="text-gray-600 font-semibold">
-          Evento
-        </label>
-        <input
-          id="event"
-          className={errors.event && "border-red-500"}
-          {...register("event", { required: true })}
-        />
-      </div>
-      <div className="space-y-1 flex flex-col">
-        <label htmlFor="police" className="text-gray-600 font-semibold">
-          Carabineros
-        </label>
-        <select
-          id="police"
-          className={errors.police && "border-red-500"}
-          {...register("police", { required: true })}
-        >
-          {Object.entries(Police).map(([key, value]) => (
-            <option key={key} value={key}>
-              {value}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="space-y-1 flex flex-col">
-        <label htmlFor="informant" className="text-gray-600 font-semibold">
-          Funcionario/a
-        </label>
-        <input
-          id="informant"
-          className={errors.informant && "border-red-500"}
-          {...register("informant", { required: true })}
-        />
-      </div>
-      <div className="space-y-1 flex flex-col">
-        <label htmlFor="operator" className="text-gray-600 font-semibold">
-          Operador
-        </label>
-        <select
-          id="operator"
-          className={errors.operator && "border-red-500"}
-          {...register("operator", { required: true })}
-        >
-          {operatos.map((operator) => (
-            <option key={operator.id} value={operator.fullName}>
-              {operator.fullName}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="md:col-span-2">
-        <button
-          className="bg-indigo-600 text-white py-2 rounded-md w-full hover:bg-indigo-700 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed flex justify-center items-center"
-          disabled={isLoading}
-          type="submit"
-          title="Crear código azul"
-        >
-          {isLoading ? (
-            <div
-              className="w-5 h-5 rounded-full animate-spin
-                border-4 border-solid border-indigo-700 border-t-transparent"
-            ></div>
-          ) : (
-            "Crear"
+    <Form {...form}>
+      <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="grid grid-cols-2 gap-3">
+          {/* Fecha y hora */}
+          <FormField
+            control={form.control}
+            name="createdAt"
+            render={({ field }) => (
+              <InputDate
+                name="createdAt"
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
+          />
+
+          {/* Carabineros */}
+          <FormField
+            control={form.control}
+            name="police"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Carabineros</FormLabel>
+                <FormControl>
+                  <Select
+                    value={
+                      field.value === true
+                        ? "Si"
+                        : field.value === false
+                        ? "No"
+                        : ""
+                    }
+                    onValueChange={(value) => {
+                      if (value == "Si") {
+                        return field.onChange(true);
+                      }
+
+                      if (value == "No") {
+                        return field.onChange(false);
+                      }
+
+                      return field.onChange(undefined);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona una opción" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={"Si"}>Sí</SelectItem>
+                      <SelectItem value={"No"}>No</SelectItem>
+                    </SelectContent>
+                    <FormMessage />
+                  </Select>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          {/* Funcionario/a */}
+          <FormField
+            control={form.control}
+            name="informant"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Funcionario/a</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Operador */}
+          <FormField
+            control={form.control}
+            name="operator"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Operador</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona un operador" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {operatos.map((operator) => (
+                      <SelectItem key={operator.id} value={operator.fullName}>
+                        {operator.fullName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                  <FormMessage />
+                </Select>
+              </FormItem>
+            )}
+          />
+        </div>
+
+        {/* Ubicación */}
+        <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Ubicación
+                <FormDescription>
+                  Ingrese la ubicación del código verde
+                </FormDescription>
+              </FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-        </button>
-      </div>
-    </form>
+        />
+
+        {/* Evento */}
+        <FormField
+          control={form.control}
+          name="event"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Evento
+                <FormDescription>
+                  Describa el evento que generó el código verde
+                </FormDescription>
+              </FormLabel>
+              <FormControl>
+                <Textarea className="resize-none" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" className="w-full" title="Crear código azul">
+          Crear
+        </Button>
+      </form>
+    </Form>
   );
 };

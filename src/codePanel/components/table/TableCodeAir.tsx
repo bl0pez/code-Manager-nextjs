@@ -1,4 +1,4 @@
-import { Pagination } from "@/components/ui/Pagination";
+import { Pagination } from "@/components/Pagination";
 import { getCodeAir } from "@/actions/codePanel/codeAir/getCodeaAir";
 
 interface Props {

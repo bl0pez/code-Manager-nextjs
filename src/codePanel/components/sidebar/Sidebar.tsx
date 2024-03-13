@@ -53,7 +53,7 @@ export const Sidebar = () => {
     <>
       <SidebarButton />
       <aside
-        className={clsx("p-2 shadow-lg w-14 bg-white transition-all", {
+        className={clsx("p-2 shadow-lg w-14 bg-background transition-all", {
           "w-60": isSideMenuOpen,
         })}
       >

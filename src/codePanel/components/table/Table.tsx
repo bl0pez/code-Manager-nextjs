@@ -1,4 +1,4 @@
-import { Pagination } from "@/components/ui/Pagination";
+import { Pagination } from "@/components/Pagination";
 
 interface Props {
   children: React.ReactNode;

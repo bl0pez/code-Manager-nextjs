@@ -1,5 +1,4 @@
 "use server";
-import prisma from "@/lib/prisma";
 import { CodeBlueService } from "@/services/codeBlue.service";
 
 interface PaginationOptions {

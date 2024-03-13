@@ -1,48 +1,46 @@
 "use client";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { Operator, Team } from "@prisma/client";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
-import { useState } from "react";
 import { createCodeBlue } from "@/actions/codePanel/codeBlue/createCodeBlue";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { CodeBlueSchema, CodeBlueValues } from "@/schema";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Props {
   teams: Team[];
   operatos: Operator[];
 }
 
-enum TeamCodeBlue {
-  Uci = "Uci",
-  Urgencia = "Urgencia",
-  UciPediatrica = "Uci Pediatrica",
-}
-
-enum OperatorCodeBlue {
-  Operator1 = "Alexander ",
-  Operator2 = "Bryan Lopez",
-  Operator3 = "Ignacio Huerta",
-}
-
-type FormInputs = {
-  createdAt: string;
-  informant: string;
-  location: string;
-  operator: OperatorCodeBlue;
-  team: TeamCodeBlue;
-};
-
 export const CodeBlueForm = ({ operatos, teams }: Props) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const form = useForm<CodeBlueValues>({
+    resolver: zodResolver(CodeBlueSchema),
+    defaultValues: {
+      createdAt: "",
+      informant: "",
+      location: "",
+      operator: "",
+      team: "",
+    },
+  });
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormInputs>();
-
-  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    setIsLoading(true);
-
+  const onSubmit = async (data: CodeBlueValues) => {
     const { createdAt, informant, location, operator, team } = data;
 
     const resp = await createCodeBlue({
@@ -56,98 +54,114 @@ export const CodeBlueForm = ({ operatos, teams }: Props) => {
     if (!resp.ok) {
       return toast.error(resp.message);
     } else {
-      reset();
       toast.success(resp.message);
     }
-
-    setIsLoading(false);
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="bg-white px-3 py-5 shadow md:gap-3 md:grid md:grid-cols-2"
-    >
-      <div className="space-y-1 flex flex-col">
-        <label htmlFor="createdAt" className="text-gray-600 font-semibold">
-          Fecha y hora
-        </label>
-        <input
-          id="createdAt"
-          className={errors.createdAt && "border-red-500"}
-          type="datetime-local"
-          {...register("createdAt", { required: true })}
-        />
-      </div>
-      <div className="space-y-1 flex flex-col">
-        <label htmlFor="team" className="text-gray-600 font-semibold">
-          Equipo
-        </label>
-        <select
-          id="team"
-          className={errors.team && "border-red-500"}
-          {...register("team", { required: true })}
-        >
-          {teams.map((team) => (
-            <option key={team.id} value={team.title}>
-              {team.title}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="space-y-1 flex flex-col">
-        <label htmlFor="location" className="text-gray-600 font-semibold">
-          Ubicación
-        </label>
-        <input
-          id="location"
-          className={errors.location && "border-red-500"}
-          {...register("location", { required: true })}
-        />
-      </div>
-      <div className="space-y-1 flex flex-col">
-        <label htmlFor="informant" className="text-gray-600 font-semibold">
-          Funcionario/a
-        </label>
-        <input
-          id="informant"
-          className={errors.informant && "border-red-500"}
-          {...register("informant", { required: true })}
-        />
-      </div>
-      <div className="space-y-1 flex flex-col">
-        <label htmlFor="operator" className="text-gray-600 font-semibold">
-          Operador
-        </label>
-        <select
-          id="operator"
-          className={errors.operator && "border-red-500"}
-          {...register("operator", { required: true })}
-        >
-          {operatos.map((operator) => (
-            <option key={operator.id} value={operator.fullName}>
-              {operator.fullName}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="md:col-span-2">
-        <button
-          className="bg-indigo-600 text-white py-2 rounded-md w-full hover:bg-indigo-700 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed flex justify-center items-center"
-          disabled={isLoading}
-          type="submit"
-          title="Crear código azul"
-        >
-          {isLoading ? (
-            <div
-              className="w-5 h-5 rounded-full animate-spin
-                border-4 border-solid border-indigo-700 border-t-transparent"
-            ></div>
-          ) : (
-            "Crear"
+    <Form {...form}>
+      <form className="space-y-4 w-full" onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="grid grid-cols-2 gap-3">
+          <FormField
+            control={form.control}
+            name="createdAt"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Fecha y hora</FormLabel>
+                <FormControl>
+                  <Input type="datetime-local" {...field} className="w-full" />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="team"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Equipo</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona un equipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {teams.map((team) => (
+                      <SelectItem key={team.id} value={team.title}>
+                        {team.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                  <FormMessage />
+                </Select>
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Ubicación</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-        </button>
-      </div>
-    </form>
+        />
+
+        <div className="grid grid-cols-2 gap-3">
+          <FormField
+            control={form.control}
+            name="informant"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Funcionario/a</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="operator"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Operador</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona un operador" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {operatos.map((operator) => (
+                      <SelectItem key={operator.id} value={operator.fullName}>
+                        {operator.fullName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                  <FormMessage />
+                </Select>
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <Button type="submit" className="w-full" title="Crear código azul">
+          Crear
+        </Button>
+      </form>
+    </Form>
   );
 };

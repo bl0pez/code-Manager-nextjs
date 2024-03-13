@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import z from "zod";
-import { auth } from "@/auth.config";
+import { auth } from "@/auth";
 
 const codeBlueShema = z.object({
   createdAt: z.string().min(2),

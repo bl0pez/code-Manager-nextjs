@@ -18,9 +18,9 @@ export const SidebarMenuItem = ({ icon, path, title }: Props) => {
     <Link
       href={path}
       className={clsx(
-        "flex items-center gap-2 hover:bg-indigo-600 p-1 rounded text-gray-400 hover:text-white font-semibold transition-all w-full whitespace-nowrap",
+        "flex items-center gap-2 hover:bg-primary p-1 rounded text-gray-400 hover:text-white font-semibold transition-all w-full whitespace-nowrap",
         {
-          "bg-indigo-600 text-white": isActive,
+          "bg-primary text-white": isActive,
         }
       )}
     >

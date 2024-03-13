@@ -1,62 +1,59 @@
-import { getCodeBlue } from "@/actions/codePanel/getCodeBlue";
-import { Pagination } from "@/components/ui/Pagination";
+import { CodeBlueService } from "@/services/codeBlue.service";
+import { getOperators } from "@/actions/codePanel/getOperatos";
+
+import { TableCell, TableRow } from "@/components/ui/table";
+import { MainTable } from "@/components/MainTable";
+import { Modal } from "@/components/Modal";
+import { DowloadXlsxButton } from "@/components/DowloadXlsxButton";
+import { getCodeBlueTeams } from "@/actions/codePanel/getCodeBlueTeams";
+import { CodeBlueForm } from "@/codePanel/components/form/CodeBlueForm";
 
 interface Props {
   page: number;
+  take: number;
 }
 
-const columns = [
-  "Fecha/Hora",
-  "Equipo",
-  "Ubicación",
-  "Funcionario/a",
-  "Operador",
-];
+export const TableCodeBlue = async ({ page, take }: Props) => {
+  const { codeBlue, currentPage, totalPages } =
+    await CodeBlueService.findAllCodeBlue({ page, take });
 
-const TableCodeBlue = async ({ page }: Props) => {
-  const { codeBlue, currentPage, totalPages } = await getCodeBlue({
-    page,
-  });
+  const { teams } = await getCodeBlueTeams();
+  const { operatos } = await getOperators();
 
   return (
-    <div className="bg-white shadow rounded flex-1 w-full">
-      <div className="overflow-y-auto h-80">
-        <table className="w-full">
-          <thead className="bg-indigo-600 text-white sticky top-0 text-left">
-            <tr>
-              {columns.map((column) => (
-                <th key={column} className="capitalize px-3.5 py-2 min-w-36">
-                  {column}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {codeBlue.map((code) => (
-              <tr key={code.id}>
-                <td className="px-3.5 py-2">
-                  {new Date(code.createdAt).toLocaleString()}
-                </td>
-                <td className="px-3.5 py-2">{code.team}</td>
-                <td className="px-3.5 py-2">{code.location}</td>
-                <td className="px-3.5 py-2">{code.informant}</td>
-                <td className="px-3.5 py-2">{code.operator}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <>
+      <div className="flex gap-2 mb-2">
+        <Modal
+          title="Crear Código Azul"
+          subtitle="Complete el formulario para crear un nuevo código azul"
+        >
+          <CodeBlueForm operatos={operatos} teams={teams} />
+        </Modal>
+        <DowloadXlsxButton data={codeBlue} fileName="CodeBlue" />
       </div>
-      <div className="flex justify-between flex-wrap px-3.5 py-2 bg-white w-full shadow">
-        <span className="flex items-center gap-1">
-          <div>Page</div>
-          <strong>
-            {currentPage} of {totalPages}
-          </strong>
-        </span>
-        <Pagination totalPages={totalPages} />
-      </div>
-    </div>
+
+      <MainTable
+        take={10}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        columns={[
+          "Fecha/Hora",
+          "Equipo",
+          "Ubicación",
+          "Funcionario/a",
+          "Operador",
+        ]}
+      >
+        {codeBlue.map((item, index) => (
+          <TableRow key={index}>
+            <TableCell>{new Date(item.createdAt).toLocaleString()}</TableCell>
+            <TableCell>{item.team}</TableCell>
+            <TableCell>{item.location}</TableCell>
+            <TableCell>{item.informant}</TableCell>
+            <TableCell>{item.operator}</TableCell>
+          </TableRow>
+        ))}
+      </MainTable>
+    </>
   );
 };
-
-export default TableCodeBlue;

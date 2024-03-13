@@ -1,45 +1,27 @@
 import { Suspense } from "react";
 
-import Modal from "@/codePanel/components/modal/Modal";
-import TableCodeBlue from "@/codePanel/components/table/TableCodeBlue";
-import CreateCodeBlue from "@/codePanel/components/create/CreateCodeBlue";
-import { ButtonOpenModal } from "@/codePanel/components/modal/ButtonOpenModal";
 import { Title } from "@/components/ui/Title";
 import { TableSkeleton } from "@/components/skeleton/TableSkeleton";
-import { Button } from "@/components/ui/button";
-import { DownloadIcon } from "@radix-ui/react-icons";
+import { TableCodeBlue } from "@/codePanel/components/table/TableCodeBlue";
 
 interface Props {
   searchParams: {
     page?: string;
-    showModal?: string;
+    take?: string;
   };
 }
 
 export default function BlueCodePage({ searchParams }: Props) {
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
+  const take = searchParams.take ? parseInt(searchParams.take) : 5;
+
   return (
     <div>
       <Title title="Código Azul" />
 
-      <div className="space-x-3 py-4">
-        <ButtonOpenModal />
-
-        <Button>
-          <DownloadIcon className="mr-2 size-5" />
-          Descargar
-        </Button>
-      </div>
-
       <Suspense fallback={<TableSkeleton />}>
-        <TableCodeBlue page={page} />
+        <TableCodeBlue page={page} take={take} />
       </Suspense>
-
-      {searchParams.showModal && (
-        <Modal>
-          <CreateCodeBlue />
-        </Modal>
-      )}
     </div>
   );
 }
