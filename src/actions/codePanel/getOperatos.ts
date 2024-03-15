@@ -1,17 +1,15 @@
-'use server';
+"use server";
 
 import prisma from "@/lib/prisma";
 
-export const getOperators = async() => {
+export const getOperators = async () => {
+  const operators = await prisma.operator.findMany({
+    orderBy: {
+      fullName: "asc",
+    },
+  });
 
-    const operatos = await prisma.operator.findMany({
-        orderBy: {
-            fullName: 'asc'
-        }
-    });
-
-    return {
-        operatos
-    };
-
-}
+  return {
+    operators,
+  };
+};

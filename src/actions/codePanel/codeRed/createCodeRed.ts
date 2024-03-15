@@ -1,70 +1,37 @@
 "use server";
-import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import z from "zod";
-import { auth } from "@/auth.config";
+import { isRoleValid } from "@/lib/auth";
+import { CodeRedSchema, CodeRedValues } from "@/schema";
+import { CodeRedService } from "@/services/codeRed.service";
 
-const codeRedShema = z.object({
-  createdAt: z.coerce.date(),
-  location: z.string().min(2),
-  informant: z.string().min(2),
-  operator: z.string().min(2),
-  firefightersCallTime: z.coerce.date().nullable().optional(),
-  COERadialCommunication: z.boolean(),
-});
+export const createCodeRed = async (codeRedData: CodeRedValues) => {
+  const roleValid = await isRoleValid();
 
-type Props = z.infer<typeof codeRedShema>;
-
-export const createCodeRed = async (codeRedData: Props) => {
-  const session = await auth();
-  if (!session?.user) {
+  if (roleValid) {
     return {
-      ok: false,
-      error: "Debes iniciar sesión",
+      error: roleValid.error,
     };
   }
 
-  const codeRedParsed = codeRedShema.safeParse(codeRedData);
+  const validatedFields = CodeRedSchema.safeParse(codeRedData);
 
-  if (!codeRedParsed.success) {
+  if (!validatedFields.success) {
+    console.log(validatedFields.error.errors);
+
     return {
-      ok: false,
-      message: "Todos los campos son requeridos",
+      error: validatedFields.error.errors[0].message,
     };
   }
-
-  const {
-    createdAt,
-    location,
-    informant,
-    operator,
-    firefightersCallTime,
-    COERadialCommunication,
-  } = codeRedParsed.data;
 
   try {
-    await prisma.codeRed.create({
-      data: {
-        createdAt: new Date(createdAt),
-        location: location,
-        informant: informant,
-        operator: operator,
-        firefightersCallTime: firefightersCallTime,
-        COERadialCommunication: COERadialCommunication,
-      },
-    });
-
+    await CodeRedService.create(validatedFields.data);
     revalidatePath("/codeRed");
     return {
-      ok: true,
-      message: "Código rojo creado correctamente",
+      success: "Código rojo creado correctamente",
     };
   } catch (error) {
-    console.log(error);
-
     return {
-      ok: false,
-      message: "Error al crear el código rojo",
+      error: "Error desconocido al crear el código rojo",
     };
   }
 };

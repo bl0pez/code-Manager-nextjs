@@ -28,7 +28,7 @@ const TableCodeGreen = async ({ page, take }: Props) => {
     take,
   });
 
-  const { operatos } = await getOperators();
+  const { operators } = await getOperators();
 
   return (
     <>
@@ -37,7 +37,7 @@ const TableCodeGreen = async ({ page, take }: Props) => {
           title="Crear Código Verde"
           subtitle="Complete el formulario para crear un código verde"
         >
-          <CodeGreenForm operatos={operatos} />
+          <CodeGreenForm operators={operators} />
         </Modal>
         <DowloadXlsxButton data={codeGreen} fileName="CodeGreen" />
       </div>

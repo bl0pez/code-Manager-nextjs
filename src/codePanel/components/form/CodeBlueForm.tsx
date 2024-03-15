@@ -29,10 +29,10 @@ import { SelectOperator } from "@/components/SelectOperator";
 
 interface Props {
   teams: Team[];
-  operatos: Operator[];
+  operators: Operator[];
 }
 
-export const CodeBlueForm = ({ operatos, teams }: Props) => {
+export const CodeBlueForm = ({ operators, teams }: Props) => {
   const form = useForm<CodeBlueValues>({
     resolver: zodResolver(CodeBlueSchema),
     defaultValues: {
@@ -119,7 +119,7 @@ export const CodeBlueForm = ({ operatos, teams }: Props) => {
             render={({ field }) => (
               <SelectOperator
                 name={field.name}
-                operators={operatos}
+                operators={operators}
                 onValueChange={field.onChange}
                 value={field.value}
               />

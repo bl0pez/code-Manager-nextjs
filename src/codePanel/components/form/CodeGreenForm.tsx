@@ -30,10 +30,10 @@ import { InputDate } from "@/components/InputDate";
 import { SelectOperator } from "@/components/SelectOperator";
 
 interface Props {
-  operatos: Operator[];
+  operators: Operator[];
 }
 
-export const CodeGreenForm = ({ operatos }: Props) => {
+export const CodeGreenForm = ({ operators }: Props) => {
   const route = useRouter();
 
   const form = useForm<CodeGreenValues>({
@@ -140,7 +140,7 @@ export const CodeGreenForm = ({ operatos }: Props) => {
             name="operator"
             render={({ field }) => (
               <SelectOperator
-                operators={operatos}
+                operators={operators}
                 onValueChange={field.onChange}
                 value={field.value}
                 name={field.name}

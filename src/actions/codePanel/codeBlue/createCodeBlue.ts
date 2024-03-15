@@ -21,6 +21,7 @@ export const createCodeBlue = async (codeBlueVelues: CodeBlueValues) => {
   }
 
   try {
+    await createCodeBlue(codeBlueVelues);
     revalidatePath("/codeBlue");
     return {
       success: "Código azul creado correctamente",

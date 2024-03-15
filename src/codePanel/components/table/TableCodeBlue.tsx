@@ -18,7 +18,7 @@ export const TableCodeBlue = async ({ page, take }: Props) => {
     await CodeBlueService.findAllCodeBlue({ page, take });
 
   const { teams } = await getCodeBlueTeams();
-  const { operatos } = await getOperators();
+  const { operators } = await getOperators();
 
   return (
     <>
@@ -27,14 +27,12 @@ export const TableCodeBlue = async ({ page, take }: Props) => {
           title="Crear Código Azul"
           subtitle="Complete el formulario para crear un nuevo código azul"
         >
-          <CodeBlueForm operatos={operatos} teams={teams} />
+          <CodeBlueForm operators={operators} teams={teams} />
         </Modal>
         <DowloadXlsxButton data={codeBlue} fileName="CodeBlue" />
       </div>
 
       <MainTable
-        take={10}
-        currentPage={currentPage}
         totalPages={totalPages}
         columns={[
           "Fecha/Hora",
