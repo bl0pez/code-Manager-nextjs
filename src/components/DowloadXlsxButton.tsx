@@ -1,8 +1,8 @@
 "use client";
+import { Button } from "@/components/ui/button";
+
 import * as XLSX from "xlsx";
 import { FaFileDownload } from "react-icons/fa";
-
-import { Button } from "./ui/button";
 
 interface Props {
   data: any;
