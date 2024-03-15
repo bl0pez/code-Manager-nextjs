@@ -1,7 +1,8 @@
 // lrc: creacion de layout para el panel de codigo
 import { redirect } from "next/navigation";
-import { auth } from "@/auth.config";
 import { AdminMenu } from "@/codePanel/components/menu/AdminMenu";
+import { auth } from "@/auth";
+import { Role } from "@prisma/client";
 
 export default async function AdminLayout({
   children,
@@ -10,7 +11,7 @@ export default async function AdminLayout({
 }) {
   const session = await auth();
 
-  if (session?.user.role !== "admin") {
+  if (session?.user.role !== Role.admin) {
     redirect("/");
   }
 

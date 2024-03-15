@@ -1,14 +1,13 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
-import { auth } from "@/auth.config";
-
-type Role = "admin" | "user" | "operator";
+import { auth } from "@/auth";
+import { Role } from "@prisma/client";
 
 export const changeUserRole = async (userId: string, role: string) => {
   const session = await auth();
 
-  if (session?.user.role !== "admin") {
+  if (session?.user.role !== Role.admin) {
     return {
       ok: false,
       message: "Debes ser administrador para realizar esta acción",
