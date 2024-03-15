@@ -1,5 +1,4 @@
 import { getUsers } from "@/actions/codePanel/admin/getUsers";
-import { TBodyUser } from "@/codePanel/components/table/tbody/TBodyUser";
 
 const columns = ["fullName", "email", "isActive", "role"];
 
