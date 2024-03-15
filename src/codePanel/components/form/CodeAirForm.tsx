@@ -1,125 +1,149 @@
 "use client";
-import { useState } from "react";
 import { Operator } from "@prisma/client";
-import { useForm, type SubmitHandler } from "react-hook-form";
-import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+import { CodeAirSchema, CodeAirValues } from "@/schema";
+import { useFormStatus } from "@/hooks/useFormStatus";
+import { SelectOperator } from "@/components/SelectOperator";
 import { createCodeAir } from "@/actions/codePanel/codeAir/createCodeAir";
+import { InputDate } from "@/components/InputDate";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Props {
   operators: Operator[];
 }
 
-type FormInputs = {
-  createdAt: Date;
-  location: string;
-  informant: string;
-  operator: string;
-  emergencyDetails: string | null;
-};
-
 export const CodeAirForm = ({ operators }: Props) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const { isPending, setAlertMessage, startTransition } = useFormStatus();
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormInputs>();
+  const form = useForm<CodeAirValues>({
+    resolver: zodResolver(CodeAirSchema),
+    defaultValues: {
+      createdAt: undefined,
+      location: "",
+      emergencyDetails: "",
+      operator: "",
+      informant: "",
+    },
+  });
 
-  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    setIsLoading(true);
+  const onSubmit = (values: CodeAirValues) => {
+    startTransition(async () => {
+      const resp = await createCodeAir(values);
 
-    const resp = await createCodeAir(data);
+      if (resp.error) {
+        setAlertMessage({ message: resp.error, type: "error" });
+        return;
+      }
 
-    if (!resp.ok) {
-      toast.error(resp.message);
-    } else {
-      reset();
-      toast.success(resp.message);
-    }
-
-    setIsLoading(false);
+      form.reset();
+      setAlertMessage({ message: resp.success, type: "success" });
+    });
   };
-
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="bg-white px-3 py-5 shadow gap-3 grid md:grid-cols-2 rounded"
-    >
-      <div className="space-y-1 flex flex-col">
-        <label htmlFor="createdAt" className="text-gray-600 font-semibold">
-          Fecha y hora
-        </label>
-        <input
-          id="createdAt"
-          className={errors.createdAt && "border-red-500"}
-          type="datetime-local"
-          {...register("createdAt", { required: true })}
+    <Form {...form}>
+      <form className="space-y-4 w-full" onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="grid grid-cols-2 gap-3">
+          {/* Fecha y hora */}
+          <FormField
+            control={form.control}
+            name="createdAt"
+            render={({ field }) => (
+              <InputDate
+                name="createdAt"
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
+          />
+
+          {/* Funcionario/a */}
+          <FormField
+            control={form.control}
+            name="informant"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Funcionario/a</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Operador */}
+          <FormField
+            control={form.control}
+            name="operator"
+            render={({ field }) => (
+              <SelectOperator
+                name={field.name}
+                operators={operators}
+                onValueChange={field.onChange}
+                value={field.value}
+              />
+            )}
+          />
+        </div>
+
+        {/* Ubicación */}
+        <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Ubicación</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      <div className="space-y-1 flex flex-col">
-        <label htmlFor="location" className="text-gray-600 font-semibold">
-          Lugar de la emergencia
-        </label>
-        <input
-          id="location"
-          className={errors.location && "border-red-500"}
-          {...register("location", { required: true })}
+
+        {/* Detalle de la emergencia */}
+        <FormField
+          control={form.control}
+          name="emergencyDetails"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Detalle de la emergencia
+                <FormDescription>
+                  Ingrese el detalle de la emergencia
+                </FormDescription>
+              </FormLabel>
+              <FormControl>
+                <Textarea className="resize-none" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      <div className="space-y-1 flex flex-col">
-        <label
-          htmlFor="emergencyDetails"
-          className="text-gray-600 font-semibold"
-        >
-          Detalles de la emergencia
-        </label>
-        <input id="emergencyDetails" {...register("emergencyDetails")} />
-      </div>
-      <div className="space-y-1 flex flex-col">
-        <label htmlFor="informant" className="text-gray-600 font-semibold">
-          Funcionario/a
-        </label>
-        <input
-          id="informant"
-          className={errors.informant && "border-red-500"}
-          {...register("informant", { required: true })}
-        />
-      </div>
-      <div className="space-y-1 flex flex-col">
-        <label htmlFor="operator" className="text-gray-600 font-semibold">
-          Operador
-        </label>
-        <select
-          id="operator"
-          className={errors.operator && "border-red-500"}
-          {...register("operator", { required: true })}
-        >
-          {operators.map((operator) => (
-            <option key={operator.id} value={operator.fullName}>
-              {operator.fullName}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="md:col-span-2">
-        <button
-          className="bg-indigo-600 text-white py-2 rounded-md w-full hover:bg-indigo-700 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed flex justify-center items-center"
-          disabled={isLoading}
+
+        <Button
+          disabled={isPending}
           type="submit"
+          className="w-full"
           title="Crear código azul"
         >
-          {isLoading ? (
-            <div
-              className="w-5 h-5 rounded-full animate-spin
-              border-4 border-solid border-indigo-700 border-t-transparent"
-            ></div>
-          ) : (
-            "Crear"
-          )}
-        </button>
-      </div>
-    </form>
+          Crear
+        </Button>
+      </form>
+    </Form>
   );
 };

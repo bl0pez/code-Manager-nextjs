@@ -1,5 +1,4 @@
 import { getUsers } from "@/actions/codePanel/admin/getUsers";
-import { Table } from "@/codePanel/components/table/Table";
 import { TBodyUser } from "@/codePanel/components/table/tbody/TBodyUser";
 
 const columns = ["fullName", "email", "isActive", "role"];
@@ -15,17 +14,5 @@ export default async function UsersPage({ searchParams }: Props) {
     page: searchParams.page,
   });
 
-  return (
-    <div>
-      <Table
-        columns={columns}
-        currentPage={currentPage}
-        totalPages={totalPages}
-      >
-        {users.map((user) => (
-          <TBodyUser key={user.id} user={user} />
-        ))}
-      </Table>
-    </div>
-  );
+  return <div></div>;
 }

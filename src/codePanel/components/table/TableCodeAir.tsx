@@ -1,8 +1,14 @@
-import { Pagination } from "@/components/Pagination";
 import { getCodeAir } from "@/actions/codePanel/codeAir/getCodeaAir";
+import { Modal } from "@/components/Modal";
+import { DowloadXlsxButton } from "@/components/DowloadXlsxButton";
+import { MainTable } from "@/components/MainTable";
+import { TableCell, TableRow } from "@/components/ui/table";
+import { CodeAirForm } from "@/codePanel/components/form/CodeAirForm";
+import { getOperators } from "@/actions/codePanel/getOperatos";
 
 interface Props {
   page: number;
+  take: number;
 }
 
 const columns = [
@@ -13,49 +19,38 @@ const columns = [
   "Operador",
 ];
 
-const TableCodeGreen = async ({ page }: Props) => {
+const TableCodeGreen = async ({ page, take }: Props) => {
   const { codeAir, currentPage, totalPages } = await getCodeAir({
     page,
+    take,
   });
 
+  const { operators } = await getOperators();
+
   return (
-    <div className="bg-white shadow rounded flex-1 w-full">
-      <div className="overflow-y-auto h-80">
-        <table className="w-full">
-          <thead className="bg-indigo-600 text-white sticky top-0 text-left">
-            <tr>
-              {columns.map((column) => (
-                <th key={column} className="capitalize px-3.5 py-2 min-w-36">
-                  {column}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {codeAir.map((code) => (
-              <tr key={code.id}>
-                <td className="px-3.5 py-2">
-                  {new Date(code.createdAt).toLocaleString()}
-                </td>
-                <td className="px-3.5 py-2">{code.location}</td>
-                <td className="px-3.5 py-2">{code.emergencyDetails}</td>
-                <td className="px-3.5 py-2">{code.informant}</td>
-                <td className="px-3.5 py-2">{code.operator}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <>
+      <div className="flex gap-2 mb-2">
+        <Modal
+          title="Crear Código Verde"
+          subtitle="Complete el formulario para crear un código verde"
+        >
+          <CodeAirForm operators={operators} />
+        </Modal>
+        <DowloadXlsxButton data={codeAir} fileName="CodeGreen" />
       </div>
-      <div className="flex justify-between flex-wrap px-3.5 py-2 bg-white w-full shadow">
-        <span className="flex items-center gap-1">
-          <div>Page</div>
-          <strong>
-            {currentPage} of {totalPages}
-          </strong>
-        </span>
-        <Pagination totalPages={totalPages} />
-      </div>
-    </div>
+
+      <MainTable totalPages={totalPages} columns={columns}>
+        {codeAir.map((item, index) => (
+          <TableRow key={index}>
+            <TableCell>{new Date(item.createdAt).toLocaleString()}</TableCell>
+            <TableCell>{item.location}</TableCell>
+            <TableCell>{item.emergencyDetails}</TableCell>
+            <TableCell>{item.informant}</TableCell>
+            <TableCell>{item.operator}</TableCell>
+          </TableRow>
+        ))}
+      </MainTable>
+    </>
   );
 };
 

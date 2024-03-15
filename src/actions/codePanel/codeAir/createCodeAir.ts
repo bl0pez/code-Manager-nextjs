@@ -1,65 +1,37 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import prisma from "@/lib/prisma";
-import z from "zod";
-import { auth } from "@/auth.config";
+import { isRoleValid } from "@/lib/auth";
+import { CodeAirSchema, CodeAirValues, CodeRedSchema } from "@/schema";
+import { CodeAirService } from "@/services/codeAir.service";
 
-const codeAirShema = z.object({
-  createdAt: z.coerce.date(),
-  location: z.string().min(2),
-  emergencyDetails: z.string().nullable(),
-  operator: z.string().min(2),
-  informant: z.string().min(2),
-});
+export const createCodeAir = async (codeAirData: CodeAirValues) => {
+  const roleValid = await isRoleValid();
 
-type Props = z.infer<typeof codeAirShema>;
-
-export const createCodeAir = async (codeAirData: Props) => {
-  const session = await auth();
-
-  if (!session?.user) {
+  if (roleValid) {
     return {
-      ok: false,
-      error: "Debes iniciar sesión",
+      error: roleValid.error,
     };
   }
 
-  const codeAirParsed = codeAirShema.safeParse(codeAirData);
+  const validatedFields = CodeAirSchema.safeParse(codeAirData);
 
-  if (!codeAirParsed.success) {
+  if (!validatedFields.success) {
+    console.log(validatedFields.error.errors);
+
     return {
-      ok: false,
-      message: `Código aéreo no válido: ${codeAirParsed.error.message}`,
+      error: validatedFields.error.errors[0].message,
     };
   }
-
-  const { createdAt, emergencyDetails, operator, informant, location } =
-    codeAirParsed.data;
 
   try {
-    await prisma.codeAir.create({
-      data: {
-        createdAt: new Date(createdAt),
-        emergencyDetails: emergencyDetails
-          ? emergencyDetails.toLocaleLowerCase()
-          : null,
-        informant: informant.toLocaleLowerCase(),
-        operator: operator,
-        location: location.toLocaleLowerCase(),
-      },
-    });
-
+    await CodeAirService.create(validatedFields.data);
     revalidatePath("/codeAir");
     return {
-      ok: true,
-      message: "Código aéreo creado",
+      success: "Código rojo creado correctamente",
     };
   } catch (error) {
-    console.log(error);
-
     return {
-      ok: false,
-      message: "Error al crear el código aéreo",
+      error: "Error desconocido al crear el código rojo",
     };
   }
 };

@@ -62,3 +62,19 @@ export const CodeRedSchema = z.object({
 });
 
 export interface CodeRedValues extends z.infer<typeof CodeRedSchema> {}
+
+export const CodeAirSchema = z.object({
+  createdAt: validations.createdAt,
+  location: z.string({
+    invalid_type_error: "Ingresa una ubicación válida",
+    required_error: "Ingresa una ubicación",
+  }),
+  emergencyDetails: z.string().optional(),
+  informant: z.string({
+    invalid_type_error: "Ingresa un nombre válido",
+    required_error: "Ingresa un nombre",
+  }),
+  operator: validations.operator,
+});
+
+export interface CodeAirValues extends z.infer<typeof CodeAirSchema> {}
