@@ -1,5 +1,6 @@
 "use server";
-import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
+import { getCodeRedWhitPagination } from "@/data/codePanel/codeRed/getCodeRedWhitPagination";
 
 interface PaginationOptions {
   page?: number;
@@ -7,25 +8,11 @@ interface PaginationOptions {
 }
 
 export const getCodeRed = async ({ page = 1, take = 5 }: PaginationOptions) => {
-  if (isNaN(Number(page))) page = 1;
-  if (page < 1) page = 1;
+  const codeRed = await getCodeRedWhitPagination({ page, take });
 
-  const [totalCount, codeRed] = await Promise.all([
-    prisma.codeRed.count({}),
-    prisma.codeRed.findMany({
-      take: take,
-      skip: (page - 1) * take,
-      orderBy: {
-        createdAt: "desc",
-      },
-    }),
-  ]);
+  if (!codeRed) {
+    redirect("/codeRed");
+  }
 
-  const totalPages = Math.ceil(totalCount / take);
-
-  return {
-    currentPage: page,
-    totalPages: totalPages,
-    codeRed: codeRed,
-  };
+  return codeRed;
 };
