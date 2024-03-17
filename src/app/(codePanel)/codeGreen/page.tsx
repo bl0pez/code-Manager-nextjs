@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import TableCodeGreen from "@/codePanel/components/table/TableCodeGreen";
 
+import { TableCodeGreen } from "@/components/codePanel/table/TableCodeGreen";
 import { TableSkeleton } from "@/components/skeleton/TableSkeleton";
 import { Title } from "@/components/ui/Title";
 
