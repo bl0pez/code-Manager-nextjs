@@ -1,16 +1,16 @@
 "use server";
 import { revalidatePath } from "next/cache";
 
-import { isRoleValid } from "@/lib/auth";
-import { CodeGreenService } from "@/services/codeGreen.service";
+import { isAdmin } from "@/lib/auth";
 import { CodeGreenSchema, CodeGreenValues } from "@/schema";
+import prisma from "@/lib/prisma";
 
 export const createCodeGreen = async (codeGreenData: CodeGreenValues) => {
-  const roleValid = await isRoleValid();
+  const isRoleValid = await isAdmin();
 
-  if (roleValid) {
+  if (!isRoleValid) {
     return {
-      error: roleValid.error,
+      error: "No tienes permisos para realizar esta acción",
     };
   }
 
@@ -23,14 +23,17 @@ export const createCodeGreen = async (codeGreenData: CodeGreenValues) => {
   }
 
   try {
-    await CodeGreenService.create(validatedFields.data);
+    await prisma.codeAir.create({
+      data: codeGreenData,
+    });
+
     revalidatePath("/codeGreen");
     return {
       success: "Código verde creado correctamente",
     };
-  } catch (error) {
+  } catch (error: any) {
     return {
-      error: "Error desconocido al crear el código verde",
+      error: error.message || "Error al crear el código verde",
     };
   }
 };

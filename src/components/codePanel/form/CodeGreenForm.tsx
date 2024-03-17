@@ -28,12 +28,15 @@ import { InputDate } from "@/components/InputDate";
 import { SelectOperator } from "@/components/SelectOperator";
 import { createCodeGreen } from "@/actions/codePanel/codeGreen/createCodeGreen";
 import { CodeGreenSchema, CodeGreenValues } from "@/schema";
+import { useFormStatus } from "@/hooks/useFormStatus";
 
 interface Props {
   operators: Operator[];
 }
 
 export const CodeGreenForm = ({ operators }: Props) => {
+  const { isPending, setAlertMessage, startTransition } = useFormStatus();
+
   const form = useForm<CodeGreenValues>({
     resolver: zodResolver(CodeGreenSchema),
     defaultValues: {
@@ -47,15 +50,17 @@ export const CodeGreenForm = ({ operators }: Props) => {
   });
 
   const onSubmit = async (data: CodeGreenValues) => {
-    const response = await createCodeGreen(data);
+    startTransition(async () => {
+      const resp = await createCodeGreen(data);
 
-    if (response.error) {
-      toast.error(response.error);
-      return;
-    }
+      if (resp.error) {
+        setAlertMessage({ message: resp.error, type: "error" });
+        return;
+      }
 
-    form.reset();
-    toast.success(response.success);
+      form.reset();
+      setAlertMessage({ message: resp.success, type: "success" });
+    });
   };
 
   return (
@@ -187,7 +192,12 @@ export const CodeGreenForm = ({ operators }: Props) => {
           )}
         />
 
-        <Button type="submit" className="w-full" title="Crear código azul">
+        <Button
+          disabled={isPending}
+          type="submit"
+          className="w-full"
+          title="Crear código verde"
+        >
           Crear
         </Button>
       </form>
