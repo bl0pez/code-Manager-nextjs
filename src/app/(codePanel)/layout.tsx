@@ -1,4 +1,4 @@
-import { Sidebar } from "@/codePanel/components/sidebar/Sidebar";
+import { Sidebar } from "@/components/codePanel/sidebar/Sidebar";
 
 export default async function CodePanelLayout({
   children,
