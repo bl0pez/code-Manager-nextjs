@@ -4,7 +4,7 @@ import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "./auth.config";
 import { comparePassword } from "./lib/passwordEncryption";
 import { LoginSchema } from "./schema";
-import { UserService } from "./services/user.service";
+import { findUserByEmail } from "@/data/adminPanel/user/findUserByEmail";
 
 export const {
   auth,
@@ -22,7 +22,7 @@ export const {
 
         const { email, password } = parsedCredentials.data;
 
-        const user = await UserService.findUserByEmail(email);
+        const user = await findUserByEmail(email);
 
         if (!user) return null;
 

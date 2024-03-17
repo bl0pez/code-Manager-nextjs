@@ -1,17 +1,17 @@
-import prisma from "@/lib/prisma";
 import { createPagination } from "@/lib/createPagination";
+import prisma from "@/lib/prisma";
 import { PaginationOptions } from "@/services/interface";
 
-export const getUserWhitPagination = async ({
+export const getCodeBlueWhitPagination = async ({
   page = 1,
   take = 0,
 }: PaginationOptions) => {
-  const [users, count] = await Promise.all([
-    await prisma.user.findMany({
+  const [codeBlue, count] = await Promise.all([
+    await prisma.codeBlue.findMany({
       take,
       skip: (page - 1) * take,
     }),
-    await prisma.user.count(),
+    await prisma.codeBlue.count(),
   ]);
 
   const { currentPage, nextPage, prevPage, totalPages } = createPagination({
@@ -21,9 +21,9 @@ export const getUserWhitPagination = async ({
   });
 
   return {
-    currentPage,
-    totalPages,
-    users,
+    currentPage: currentPage,
+    totalPages: totalPages,
+    codeBlue,
     nextPage,
     prevPage,
   };

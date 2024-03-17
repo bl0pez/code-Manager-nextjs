@@ -1,37 +1,38 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { isRoleValid } from "@/lib/auth";
-import { CodeAirSchema, CodeAirValues, CodeRedSchema } from "@/schema";
-import { CodeAirService } from "@/services/codeAir.service";
+import { isAdmin } from "@/lib/auth";
+import { CodeAirSchema, CodeAirValues } from "@/schema";
+import prisma from "@/lib/prisma";
 
 export const createCodeAir = async (codeAirData: CodeAirValues) => {
-  const roleValid = await isRoleValid();
+  const isRoleValid = await isAdmin();
 
-  if (roleValid) {
+  if (!isRoleValid) {
     return {
-      error: roleValid.error,
+      error: "No tienes permisos para realizar esta acción",
     };
   }
 
   const validatedFields = CodeAirSchema.safeParse(codeAirData);
 
   if (!validatedFields.success) {
-    console.log(validatedFields.error.errors);
-
     return {
       error: validatedFields.error.errors[0].message,
     };
   }
 
   try {
-    await CodeAirService.create(validatedFields.data);
+    await prisma.codeAir.create({
+      data: codeAirData,
+    });
+
     revalidatePath("/codeAir");
     return {
-      success: "Código rojo creado correctamente",
+      success: "Código aéreo creado correctamente",
     };
-  } catch (error) {
+  } catch (error: any) {
     return {
-      error: "Error desconocido al crear el código rojo",
+      error: error.message || "Error al crear el código aereo",
     };
   }
 };

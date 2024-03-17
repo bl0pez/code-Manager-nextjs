@@ -5,7 +5,6 @@ import { Pagination } from "@/components/Pagination";
 import { CreateUserForm } from "@/components/adminPanel/user/CreateUserForm";
 import { UserChangeRole } from "@/components/adminPanel/user/UserChangeRole";
 import { UserStatusToggle } from "@/components/adminPanel/user/UserStatusToggle";
-import { Switch } from "@/components/ui/switch";
 import { TableCell, TableRow } from "@/components/ui/table";
 interface Props {
   searchParams: {
@@ -18,11 +17,8 @@ export default async function UsersPage({ searchParams }: Props) {
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const take = searchParams.take ? parseInt(searchParams.take) : 5;
 
-  const { currentPage, totalPages, users, nextPage, prevPage } = await getUsers(
-    {
-      page,
-      take,
-    }
+  const { currentPage, nextPage, prevPage, totalPages, users } = await getUsers(
+    { page, take }
   );
 
   return (
