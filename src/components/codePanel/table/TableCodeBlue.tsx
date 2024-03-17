@@ -1,12 +1,12 @@
-import { CodeBlueService } from "@/services/codeBlue.service";
+import { CodeBlueForm } from "@/components/codePanel/form/CodeBlueForm";
+import { DowloadXlsxButton } from "@/components/DowloadXlsxButton";
+import { getCodeBlue } from "@/actions/codePanel/codeBlue/getCodeBlue";
+import { getCodeBlueTeams } from "@/actions/codePanel/getCodeBlueTeams";
 import { getOperators } from "@/actions/codePanel/getOperatos";
-
-import { TableCell, TableRow } from "@/components/ui/table";
 import { MainTable } from "@/components/MainTable";
 import { Modal } from "@/components/Modal";
-import { DowloadXlsxButton } from "@/components/DowloadXlsxButton";
-import { getCodeBlueTeams } from "@/actions/codePanel/getCodeBlueTeams";
-import { CodeBlueForm } from "@/codePanel/components/form/CodeBlueForm";
+import { Pagination } from "@/components/Pagination";
+import { TableCell, TableRow } from "@/components/ui/table";
 
 interface Props {
   page: number;
@@ -14,8 +14,8 @@ interface Props {
 }
 
 export const TableCodeBlue = async ({ page, take }: Props) => {
-  const { codeBlue, currentPage, totalPages } =
-    await CodeBlueService.findAllCodeBlue({ page, take });
+  const { codeBlue, currentPage, nextPage, prevPage, totalPages } =
+    await getCodeBlue({ page, take });
 
   const { teams } = await getCodeBlueTeams();
   const { operators } = await getOperators();
@@ -52,6 +52,13 @@ export const TableCodeBlue = async ({ page, take }: Props) => {
           </TableRow>
         ))}
       </MainTable>
+
+      <Pagination
+        currentPage={currentPage}
+        nextPage={nextPage}
+        prevPage={prevPage}
+        totalPages={totalPages}
+      />
     </>
   );
 };
