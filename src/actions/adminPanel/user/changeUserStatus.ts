@@ -1,6 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { updateUser } from "@/data/adminPanel/user/updateUser";
+import { isAdmin } from "@/lib/auth";
 
 interface Props {
   value: boolean;
@@ -8,6 +9,14 @@ interface Props {
 }
 
 export const changeUserStatus = async ({ userId, value }: Props) => {
+  const isRoleValid = await isAdmin();
+
+  if (!isRoleValid) {
+    return {
+      error: "No tienes permisos para realizar esta acción",
+    };
+  }
+
   const user = await updateUser({
     userId,
     data: {
