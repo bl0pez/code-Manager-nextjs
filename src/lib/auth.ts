@@ -21,3 +21,8 @@ export const isRoleValid = async () => {
     };
   }
 };
+
+export const isAdmin = async () => {
+  const role = await currentRole();
+  return role === Role.admin;
+};

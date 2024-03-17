@@ -1,3 +1,4 @@
+import { Role } from "@prisma/client";
 import { z } from "zod";
 
 const validations = {
@@ -78,3 +79,14 @@ export const CodeAirSchema = z.object({
 });
 
 export interface CodeAirValues extends z.infer<typeof CodeAirSchema> {}
+
+export const CreateUserSchema = z.object({
+  email: validations.email,
+  fullName: z.string().min(3, {
+    message: "Ingresa un nombre válido",
+  }),
+  password: validations.password,
+  role: z.enum([Role.admin, Role.operator, Role.user]),
+});
+
+export interface CreateUserValues extends z.infer<typeof CreateUserSchema> {}
