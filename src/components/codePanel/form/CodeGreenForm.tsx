@@ -2,7 +2,6 @@
 import { useForm } from "react-hook-form";
 import { Operator } from "@prisma/client";
 import { toast } from "react-toastify";
-import { CodeGreenSchema, CodeGreenValues } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -24,18 +23,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { createCodeGreen } from "@/actions/codePanel/codeGreen/createCodeGreen";
-import { useRouter } from "next/navigation";
 import { InputDate } from "@/components/InputDate";
+
 import { SelectOperator } from "@/components/SelectOperator";
+import { createCodeGreen } from "@/actions/codePanel/codeGreen/createCodeGreen";
+import { CodeGreenSchema, CodeGreenValues } from "@/schema";
 
 interface Props {
   operators: Operator[];
 }
 
 export const CodeGreenForm = ({ operators }: Props) => {
-  const route = useRouter();
-
   const form = useForm<CodeGreenValues>({
     resolver: zodResolver(CodeGreenSchema),
     defaultValues: {

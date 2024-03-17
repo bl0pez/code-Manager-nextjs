@@ -1,5 +1,6 @@
 "use server";
-import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
+import { getCodeGreenWhitPagination } from "@/data/codePanel/codeGreen/getCodeGreenWhitPagination";
 
 interface PaginationOptions {
   page?: number;
@@ -10,25 +11,11 @@ export const getCodeGreen = async ({
   page = 1,
   take = 5,
 }: PaginationOptions) => {
-  if (isNaN(Number(page))) page = 1;
-  if (page < 1) page = 1;
+  const codeGreen = await getCodeGreenWhitPagination({ page, take });
 
-  const [totalCount, codeGreen] = await Promise.all([
-    await prisma.codeGreen.count(),
-    prisma.codeGreen.findMany({
-      take: take,
-      skip: (page - 1) * take,
-      orderBy: {
-        createdAt: "desc",
-      },
-    }),
-  ]);
+  if (!codeGreen) {
+    redirect("/codeGreen");
+  }
 
-  const totalPages = Math.ceil(totalCount / take);
-
-  return {
-    currentPage: page,
-    totalPages: totalPages,
-    codeGreen: codeGreen,
-  };
+  return codeGreen;
 };

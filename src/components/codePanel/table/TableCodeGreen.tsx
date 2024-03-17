@@ -2,11 +2,10 @@ import { Pagination } from "@/components/Pagination";
 import { getCodeGreen } from "@/actions/codePanel/codeGreen/getCodeGreen";
 import { MainTable } from "@/components/MainTable";
 import { Modal } from "@/components/Modal";
-import { CodeBlueForm } from "../form/CodeBlueForm";
 import { DowloadXlsxButton } from "@/components/DowloadXlsxButton";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { getOperators } from "@/actions/codePanel/getOperatos";
-import { CodeGreenForm } from "../form/CodeGreenForm";
+import { CodeGreenForm } from "@/components/codePanel/form/CodeGreenForm";
 
 interface Props {
   page: number;
@@ -22,11 +21,12 @@ const columns = [
   "Operador",
 ];
 
-const TableCodeGreen = async ({ page, take }: Props) => {
-  const { codeGreen, currentPage, totalPages } = await getCodeGreen({
-    page,
-    take,
-  });
+export const TableCodeGreen = async ({ page, take }: Props) => {
+  const { codeGreen, totalPages, nextPage, prevPage, currentPage } =
+    await getCodeGreen({
+      page,
+      take,
+    });
 
   const { operators } = await getOperators();
 
@@ -54,8 +54,13 @@ const TableCodeGreen = async ({ page, take }: Props) => {
           </TableRow>
         ))}
       </MainTable>
+
+      <Pagination
+        currentPage={currentPage}
+        nextPage={nextPage}
+        prevPage={prevPage}
+        totalPages={totalPages}
+      />
     </>
   );
 };
-
-export default TableCodeGreen;

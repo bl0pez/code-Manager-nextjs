@@ -18,19 +18,40 @@ import { Button } from "./ui/button";
 
 interface Props {
   totalPages: number;
+  nextPage: number | null;
+  prevPage: number | null;
+  currentPage: number;
 }
 
-export const Pagination = ({ totalPages }: Props) => {
+export const Pagination = ({
+  totalPages,
+  nextPage,
+  prevPage,
+  currentPage,
+}: Props) => {
   const pathname = usePathname();
   const route = useRouter();
   const searchParams = useSearchParams();
 
   const pageString = searchParams.get("page") ?? 1;
-  const currentPage = isNaN(+pageString) ? 1 : +pageString;
 
   if (currentPage < 1 || isNaN(+pageString)) {
     redirect(pathname);
   }
+
+  const handleNextPage = () => {
+    if (nextPage === null) return;
+    const params = new URLSearchParams(searchParams);
+    params.set("page", nextPage.toString());
+    route.push(`${pathname}?${params.toString()}`);
+  };
+
+  const handlePrevPage = () => {
+    if (prevPage === null) return;
+    const params = new URLSearchParams(searchParams);
+    params.set("page", prevPage.toString());
+    route.push(`${pathname}?${params.toString()}`);
+  };
 
   return (
     <div className="bg-background flex items-center p-2 justify-between flex-wrap gap-2 flex-col md:flex-row">
@@ -59,10 +80,21 @@ export const Pagination = ({ totalPages }: Props) => {
             </SelectContent>
           </Select>
         </div>
-        <Button variant="default" size="sm">
+
+        <Button
+          disabled={prevPage === null}
+          variant="default"
+          size="sm"
+          onClick={handlePrevPage}
+        >
           <FaChevronLeft />
         </Button>
-        <Button variant="default" size="sm">
+        <Button
+          disabled={nextPage === null}
+          onClick={handleNextPage}
+          variant="default"
+          size="sm"
+        >
           <FaChevronRight />
         </Button>
       </div>

@@ -6,7 +6,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Pagination } from "./Pagination";
 
 interface Props {
   children: React.ReactNode;
@@ -37,7 +36,6 @@ export const MainTable = ({ children, columns, totalPages }: Props) => {
           )}
         </TableBody>
       </Table>
-      <Pagination totalPages={totalPages} />
     </>
   );
 };
