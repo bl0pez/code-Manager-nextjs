@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import { Title } from "@/components/ui/Title";
 import { TableSkeleton } from "@/components/skeleton/TableSkeleton";
-import { TableCodeBlue } from "@/codePanel/components/table/TableCodeBlue";
+import { TableCodeBlue } from "@/components/codePanel/table/TableCodeBlue";
 
 interface Props {
   searchParams: {
