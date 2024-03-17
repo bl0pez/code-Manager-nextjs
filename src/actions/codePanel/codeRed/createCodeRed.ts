@@ -1,37 +1,38 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { isRoleValid } from "@/lib/auth";
+import { isAdmin } from "@/lib/auth";
 import { CodeRedSchema, CodeRedValues } from "@/schema";
-import { CodeRedService } from "@/services/codeRed.service";
+import prisma from "@/lib/prisma";
 
 export const createCodeRed = async (codeRedData: CodeRedValues) => {
-  const roleValid = await isRoleValid();
+  const isRoleValid = await isAdmin();
 
-  if (roleValid) {
+  if (!isRoleValid) {
     return {
-      error: roleValid.error,
+      error: "No tienes permisos para realizar esta acción",
     };
   }
 
   const validatedFields = CodeRedSchema.safeParse(codeRedData);
 
   if (!validatedFields.success) {
-    console.log(validatedFields.error.errors);
-
     return {
       error: validatedFields.error.errors[0].message,
     };
   }
 
   try {
-    await CodeRedService.create(validatedFields.data);
+    await prisma.codeRed.create({
+      data: codeRedData,
+    });
+
     revalidatePath("/codeRed");
     return {
       success: "Código rojo creado correctamente",
     };
-  } catch (error) {
+  } catch (error: any) {
     return {
-      error: "Error desconocido al crear el código rojo",
+      error: error.message || "Error al crear el código rojo",
     };
   }
 };
