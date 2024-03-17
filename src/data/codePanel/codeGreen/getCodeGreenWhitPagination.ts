@@ -10,6 +10,9 @@ export const getCodeGreenWhitPagination = async ({
     await prisma.codeGreen.findMany({
       take,
       skip: (page - 1) * take,
+      orderBy: {
+        createdAt: "desc",
+      },
     }),
     await prisma.codeGreen.count(),
   ]);

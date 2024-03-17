@@ -10,6 +10,9 @@ export const getCodeRedWhitPagination = async ({
     await prisma.codeRed.findMany({
       take,
       skip: (page - 1) * take,
+      orderBy: {
+        createdAt: "desc",
+      },
     }),
     await prisma.codeRed.count(),
   ]);

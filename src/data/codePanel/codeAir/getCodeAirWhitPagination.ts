@@ -10,6 +10,9 @@ export const getCodeAirWhitPagination = async ({
     await prisma.codeAir.findMany({
       take,
       skip: (page - 1) * take,
+      orderBy: {
+        createdAt: "desc",
+      },
     }),
     await prisma.codeAir.count(),
   ]);
