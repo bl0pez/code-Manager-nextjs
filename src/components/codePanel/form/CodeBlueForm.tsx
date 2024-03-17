@@ -1,5 +1,4 @@
 "use client";
-import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -26,6 +25,7 @@ import { createCodeBlue } from "@/actions/codePanel/codeBlue/createCodeBlue";
 import { CodeBlueSchema, CodeBlueValues } from "@/schema";
 import { InputDate } from "@/components/InputDate";
 import { SelectOperator } from "@/components/SelectOperator";
+import { useFormStatus } from "@/hooks/useFormStatus";
 
 interface Props {
   teams: Team[];
@@ -33,6 +33,8 @@ interface Props {
 }
 
 export const CodeBlueForm = ({ operators, teams }: Props) => {
+  const { isPending, setAlertMessage, startTransition } = useFormStatus();
+
   const form = useForm<CodeBlueValues>({
     resolver: zodResolver(CodeBlueSchema),
     defaultValues: {
@@ -45,15 +47,17 @@ export const CodeBlueForm = ({ operators, teams }: Props) => {
   });
 
   const onSubmit = async (data: CodeBlueValues) => {
-    const resp = await createCodeBlue(data);
+    startTransition(async () => {
+      const resp = await createCodeBlue(data);
 
-    if (resp.error) {
-      toast.error(resp.error);
-      return;
-    }
+      if (resp.error) {
+        setAlertMessage({ message: resp.error, type: "error" });
+        return;
+      }
 
-    form.reset();
-    toast.success(resp.success);
+      form.reset();
+      setAlertMessage({ message: resp.success, type: "success" });
+    });
   };
 
   return (
