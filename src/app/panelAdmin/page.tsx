@@ -1,11 +1,9 @@
-import { getUsers } from "@/actions/adminPanel/user/getUsers";
-import { MainTable } from "@/components/MainTable";
+import { Suspense } from "react";
 import { Modal } from "@/components/Modal";
-import { Pagination } from "@/components/Pagination";
+import { Users } from "@/components/adminPanel/table/Users";
 import { CreateUserForm } from "@/components/adminPanel/user/CreateUserForm";
-import { UserChangeRole } from "@/components/adminPanel/user/UserChangeRole";
-import { UserStatusToggle } from "@/components/adminPanel/user/UserStatusToggle";
-import { TableCell, TableRow } from "@/components/ui/table";
+import { TableSkeleton } from "@/components/skeleton/TableSkeleton";
+
 interface Props {
   searchParams: {
     page?: string;
@@ -13,13 +11,9 @@ interface Props {
   };
 }
 
-export default async function UsersPage({ searchParams }: Props) {
+export default function UsersPage({ searchParams }: Props) {
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const take = searchParams.take ? parseInt(searchParams.take) : 5;
-
-  const { currentPage, nextPage, prevPage, totalPages, users } = await getUsers(
-    { page, take }
-  );
 
   return (
     <>
@@ -32,30 +26,9 @@ export default async function UsersPage({ searchParams }: Props) {
         </Modal>
       </div>
 
-      <MainTable
-        totalPages={totalPages}
-        columns={["Correo Electrónico", "Nombre", "Rol", "Activo"]}
-      >
-        {users.map((item, index) => (
-          <TableRow key={index}>
-            <TableCell>{item.email}</TableCell>
-            <TableCell>{item.fullName}</TableCell>
-            <TableCell>
-              <UserChangeRole userId={item.id} role={item.role} />
-            </TableCell>
-            <TableCell>
-              <UserStatusToggle userId={item.id} value={item.isActive} />
-            </TableCell>
-          </TableRow>
-        ))}
-      </MainTable>
-
-      <Pagination
-        currentPage={currentPage}
-        nextPage={nextPage}
-        prevPage={prevPage}
-        totalPages={totalPages}
-      />
+      <Suspense fallback={<TableSkeleton />}>
+        <Users page={page} take={take} />
+      </Suspense>
     </>
   );
 }
