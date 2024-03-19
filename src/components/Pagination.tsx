@@ -53,11 +53,13 @@ export const Pagination = ({
     route.push(`${pathname}?${params.toString()}`);
   };
 
+  const current = totalPages === 0 ? 0 : currentPage;
+
   return (
     <div className="bg-background flex items-center p-2 justify-between flex-wrap gap-2 flex-col md:flex-row">
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          Pagina {currentPage} de {totalPages}
+          Pagina {current} de {totalPages}
         </div>
       </div>
       <div className="flex gap-2 items-center">

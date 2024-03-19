@@ -1,6 +1,6 @@
 import { createPagination } from "@/lib/createPagination";
 import prisma from "@/lib/prisma";
-import { PaginationOptions } from "@/services/interface";
+import { PaginationOptions } from "@/interfaces/interface";
 
 export const getCodeGreenWhitPagination = async ({
   page = 1,

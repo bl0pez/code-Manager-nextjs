@@ -19,15 +19,11 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useState, useTransition } from "react";
-import { FormAler } from "../FormAler";
-import { useRouter } from "next/navigation";
 import { login } from "@/actions/auth/login";
+import { useFormStatus } from "@/hooks/useFormStatus";
 
 export const LoginForm = () => {
-  const router = useRouter();
-  const [isLoading, startTransition] = useTransition();
-  const [message, setMessage] = useState<string | null>(null);
+  const { isPending, setAlertMessage, startTransition } = useFormStatus();
 
   const form = useForm<LoginValues>({
     resolver: zodResolver(LoginSchema),
@@ -38,13 +34,12 @@ export const LoginForm = () => {
   });
 
   const onSubmit = (values: LoginValues) => {
-    setMessage(null);
-
     startTransition(async () => {
       const resp = await login(values);
 
       if (resp?.error) {
-        setMessage(resp.error);
+        setAlertMessage({ message: resp.error, type: "error" });
+        return;
       }
     });
   };
@@ -89,9 +84,7 @@ export const LoginForm = () => {
               )}
             />
 
-            <FormAler type="error" message={message} />
-
-            <Button type="submit" disabled={isLoading} className="w-full">
+            <Button type="submit" disabled={isPending} className="w-full">
               Iniciar sesión
             </Button>
           </form>

@@ -3,20 +3,14 @@
  * Estas rutas no requieren autenticación
  * @type {string[]}
  */
-export const publicRoutes = ["/auth/new-verification"];
+export const publicRoutes = ["/auth/login"];
 
 /**
  * Una serie de rutas que se utilizan para la autenticación.
  * Estas rutas redireccionarán a los usuarios registrados a /settings
  * @type {string[]}
  */
-export const authRoutes = [
-  "/auth/login",
-  "/auth/register",
-  "/auth/error",
-  "/auth/reset-password",
-  "/auth/new-password",
-];
+export const authRoutes = ["/auth/login"];
 
 /**
  * El prefijo para las rutas de autenticación API

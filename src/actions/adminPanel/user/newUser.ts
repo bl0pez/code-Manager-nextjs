@@ -4,6 +4,7 @@ import { CreateUserSchema, CreateUserValues } from "@/schema";
 import { findUserByEmail } from "@/data/adminPanel/user/findUserByEmail";
 import { isAdmin } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { encryptPassword } from "@/lib/passwordEncryption";
 
 export const newUser = async (user: CreateUserValues) => {
   const isRoleValid = await isAdmin();
@@ -32,7 +33,16 @@ export const newUser = async (user: CreateUserValues) => {
     };
   }
 
-  const newUser = await createUser(validatedFields.data);
+  const { email, fullName, password, role } = validatedFields.data;
+
+  const passwordHash = await encryptPassword(password);
+
+  const newUser = await createUser({
+    email,
+    fullName,
+    password: passwordHash,
+    role,
+  });
 
   if (!newUser) {
     return {

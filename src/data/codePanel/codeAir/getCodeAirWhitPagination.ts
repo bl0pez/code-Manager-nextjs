@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { createPagination } from "@/lib/createPagination";
-import { PaginationOptions } from "@/services/interface";
+import { PaginationOptions } from "@/interfaces/interface";
 
 export const getCodeAirWhitPagination = async ({
   page = 1,

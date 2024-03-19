@@ -1,5 +1,5 @@
 "use server";
-import { PaginationOptions } from "@/services/interface";
+import { PaginationOptions } from "@/interfaces/interface";
 import { getUserWhitPagination } from "@/data/adminPanel/user/getUserWhitPagination";
 
 export const getUsers = async ({ page, take }: PaginationOptions) => {
