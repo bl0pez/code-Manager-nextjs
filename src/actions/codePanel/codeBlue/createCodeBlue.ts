@@ -5,11 +5,11 @@ import { isRoleValid } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
 export const createCodeBlue = async (codeBlueVelues: CodeBlueValues) => {
-  const roleValid = await isRoleValid();
+  const isRoleInvalid = await isRoleValid();
 
-  if (roleValid) {
+  if (!isRoleInvalid) {
     return {
-      error: roleValid.error,
+      error: "No tienes permisos para realizar esta acción",
     };
   }
 

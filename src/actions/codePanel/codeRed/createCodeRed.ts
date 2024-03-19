@@ -1,13 +1,13 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { isAdmin } from "@/lib/auth";
+import { isRoleValid } from "@/lib/auth";
 import { CodeRedSchema, CodeRedValues } from "@/schema";
 import prisma from "@/lib/prisma";
 
 export const createCodeRed = async (codeRedData: CodeRedValues) => {
-  const isRoleValid = await isAdmin();
+  const isRoleInvalid = await isRoleValid();
 
-  if (!isRoleValid) {
+  if (!isRoleInvalid) {
     return {
       error: "No tienes permisos para realizar esta acción",
     };

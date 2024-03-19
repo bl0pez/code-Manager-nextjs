@@ -1,13 +1,13 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { isAdmin } from "@/lib/auth";
+import { isRoleValid } from "@/lib/auth";
 import { CodeAirSchema, CodeAirValues } from "@/schema";
 import prisma from "@/lib/prisma";
 
 export const createCodeAir = async (codeAirData: CodeAirValues) => {
-  const isRoleValid = await isAdmin();
+  const isRoleInvalid = await isRoleValid();
 
-  if (!isRoleValid) {
+  if (!isRoleInvalid) {
     return {
       error: "No tienes permisos para realizar esta acción",
     };

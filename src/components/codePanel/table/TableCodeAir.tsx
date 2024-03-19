@@ -6,6 +6,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { CodeAirForm } from "@/components/codePanel/form/CodeAirForm";
 import { getOperators } from "@/actions/codePanel/getOperatos";
 import { Pagination } from "@/components/Pagination";
+import { getAllCodeAir } from "@/actions/codePanel/codeAir/getAllCodeAir";
 
 interface Props {
   page: number;
@@ -27,6 +28,8 @@ export const TableCodeAir = async ({ page, take }: Props) => {
       take,
     });
 
+  const data = await getAllCodeAir();
+
   const { operators } = await getOperators();
 
   return (
@@ -38,7 +41,7 @@ export const TableCodeAir = async ({ page, take }: Props) => {
         >
           <CodeAirForm operators={operators} />
         </Modal>
-        <DowloadXlsxButton data={codeAir} fileName="CodeGreen" />
+        <DowloadXlsxButton data={data} fileName="CodeGreen" />
       </div>
 
       <MainTable totalPages={totalPages} columns={columns}>

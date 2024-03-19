@@ -11,16 +11,8 @@ interface Props {
 
 export const DowloadXlsxButton = ({ data, fileName }: Props) => {
   const handleClick = () => {
-    const mappedData = data.map((item: any) => ({
-      "Fecha/Hora": new Date(item.createdAt).toLocaleString(),
-      Equipo: item.team,
-      Ubicación: item.location,
-      "Funcionario/a": item.informant,
-      Operador: item.operator,
-    }));
-
-    const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(data);
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
     XLSX.writeFile(wb, `${fileName}.xlsx`);
   };

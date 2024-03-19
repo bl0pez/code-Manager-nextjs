@@ -15,11 +15,7 @@ export const currentRole = async () => {
 
 export const isRoleValid = async () => {
   const role = await currentRole();
-  if (role === Role.user) {
-    return {
-      error: "No tienes permisos para realizar esta acción",
-    };
-  }
+  return role !== Role.user;
 };
 
 export const isAdmin = async () => {
