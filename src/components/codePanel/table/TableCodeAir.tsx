@@ -1,4 +1,4 @@
-import { getCodeAir } from "@/actions/codePanel/codeAir/getCodeaAir";
+import { getCodeAirWhitPagination } from "@/actions/codePanel/codeAir/getCodeAirWhitPagination";
 import { Modal } from "@/components/Modal";
 import { DowloadXlsxButton } from "@/components/DowloadXlsxButton";
 import { MainTable } from "@/components/MainTable";
@@ -23,7 +23,7 @@ const columns = [
 
 export const TableCodeAir = async ({ page, take }: Props) => {
   const { codeAir, currentPage, totalPages, nextPage, prevPage } =
-    await getCodeAir({
+    await getCodeAirWhitPagination({
       page,
       take,
     });
