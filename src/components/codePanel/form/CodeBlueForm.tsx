@@ -146,7 +146,12 @@ export const CodeBlueForm = ({ operators, teams }: Props) => {
           )}
         />
 
-        <Button type="submit" className="w-full" title="Crear código azul">
+        <Button
+          type="submit"
+          className="w-full"
+          title="Crear código azul"
+          disabled={isPending}
+        >
           Crear
         </Button>
       </form>

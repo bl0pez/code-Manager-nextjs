@@ -10,7 +10,7 @@ export const SidebarButton = () => {
   return (
     <button
       onClick={toggleSideMenu}
-      className="absolute right-4 bottom-4 bg-indigo-600 p-3 text-white rounded-full"
+      className="absolute right-4 bottom-4 bg-primary p-3 text-white rounded-full"
     >
       {isSideMenuOpen ? (
         <MdClose className="w-6 h-6" />

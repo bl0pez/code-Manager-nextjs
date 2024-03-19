@@ -5,12 +5,15 @@ import { IoShieldOutline } from "react-icons/io5";
 import { FaFire } from "react-icons/fa";
 import { FaHelicopter } from "react-icons/fa";
 import { FaRunning } from "react-icons/fa";
+import { RiAdminLine } from "react-icons/ri";
 import clsx from "clsx";
 
 import { SidebarMenuItem } from "./SidebarMenuItem";
 import { SidebarButton } from "./SidebarButton";
 import { LogoutButton } from "./LogoutButton";
 import { useUiStore } from "@/store/ui/ui-store";
+import { useCurrentRole } from "@/hooks/useCurrentRole";
+import { Role } from "@prisma/client";
 
 const className = "w-6 h-6";
 
@@ -48,6 +51,7 @@ const menuItems = [
 ];
 
 export const Sidebar = () => {
+  const currentRole = useCurrentRole();
   const isSideMenuOpen = useUiStore((state) => state.isSideMenuOpen);
   return (
     <>
@@ -74,6 +78,16 @@ export const Sidebar = () => {
             {menuItems.map((item) => (
               <SidebarMenuItem key={item.path} {...item} />
             ))}
+
+            {currentRole === Role.admin && (
+              <SidebarMenuItem
+                path="/panelAdmin"
+                title="Panel Admin"
+                icon={
+                  <RiAdminLine className={`text-indigo-600 ${className}`} />
+                }
+              />
+            )}
           </nav>
           <LogoutButton />
         </div>
