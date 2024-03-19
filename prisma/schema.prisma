@@ -46,8 +46,9 @@ model CodeAir {
 }
 
 model Operator {
-  id       String @id @default(uuid())
+  id       String  @id @default(uuid())
   fullName String
+  isActive Boolean @default(true)
 }
 
 model Team {

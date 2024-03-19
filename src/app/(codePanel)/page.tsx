@@ -1,5 +1,5 @@
 import { getAllCode } from "@/actions/codePanel/dashboard/getAllCode";
-import { CardBar } from "@/codePanel/components/chart/CardBar";
+import { CardBar } from "@/components/chart/CardBar";
 import { Title } from "@/components/ui/Title";
 
 const labels = [

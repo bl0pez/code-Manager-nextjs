@@ -90,3 +90,12 @@ export const CreateUserSchema = z.object({
 });
 
 export interface CreateUserValues extends z.infer<typeof CreateUserSchema> {}
+
+export const CreateOperatorSchema = z.object({
+  fullName: z.string().min(3, {
+    message: "Ingresa un nombre válido",
+  }),
+});
+
+export interface CreateOperatorValues
+  extends z.infer<typeof CreateOperatorSchema> {}

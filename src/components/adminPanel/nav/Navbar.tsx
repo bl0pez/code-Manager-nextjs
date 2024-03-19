@@ -5,8 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const routes = [
-  { name: "Usuarios", path: "/adminPanel" },
-  { name: "Operadores", path: "/adminPanel/operators" },
+  { name: "Usuarios", path: "/panelAdmin" },
+  { name: "Operadores", path: "/panelAdmin/operators" },
   { name: "Dashboard", path: "/" },
 ];
 
@@ -16,8 +16,8 @@ export const Navbar = () => {
   const isPath = (path: string) => patName === path;
 
   return (
-    <header className="bg-primary container shadow">
-      <nav className="text-white">
+    <header className="bg-primary shadow">
+      <nav className="text-white container">
         {routes.map((route, i) => (
           <Button
             key={i}
