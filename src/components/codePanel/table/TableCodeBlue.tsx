@@ -1,12 +1,12 @@
 import { CodeBlueForm } from "@/components/codePanel/form/CodeBlueForm";
 import { DowloadXlsxButton } from "@/components/DowloadXlsxButton";
-import { getCodeBlue } from "@/actions/codePanel/codeBlue/getCodeBlue";
 import { getCodeBlueTeams } from "@/actions/codePanel/codeBlue/getCodeBlueTeams";
 import { getOperators } from "@/actions/codePanel/getOperatos";
 import { MainTable } from "@/components/MainTable";
 import { Modal } from "@/components/Modal";
 import { Pagination } from "@/components/Pagination";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { getCodeBlueWhitPagination } from "@/actions/codePanel/codeBlue/getCodeBlueWhitPagination";
 
 interface Props {
   page: number;
@@ -15,7 +15,7 @@ interface Props {
 
 export const TableCodeBlue = async ({ page, take }: Props) => {
   const { codeBlue, currentPage, nextPage, prevPage, totalPages } =
-    await getCodeBlue({ page, take });
+    await getCodeBlueWhitPagination({ page, take });
 
   const { teams } = await getCodeBlueTeams();
   const { operators } = await getOperators();
