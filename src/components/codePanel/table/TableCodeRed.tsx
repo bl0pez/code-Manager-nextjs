@@ -1,6 +1,6 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 
-import { getCodeRed } from "@/actions/codePanel/codeRed/getCodeRed";
+import { getCodeRedWhitPagination } from "@/actions/codePanel/codeRed/getCodeRedWhitPagination";
 import { getOperators } from "@/actions/codePanel/getOperatos";
 import { DowloadXlsxButton } from "@/components/DowloadXlsxButton";
 import { MainTable } from "@/components/MainTable";
@@ -24,7 +24,7 @@ const columns = [
 
 export const TableCodeRed = async ({ page, take }: Props) => {
   const { codeRed, currentPage, totalPages, nextPage, prevPage } =
-    await getCodeRed({
+    await getCodeRedWhitPagination({
       page,
       take,
     });

@@ -88,6 +88,7 @@ export const CodeRedForm = ({ operators }: Props) => {
                 <FormLabel>Hora de llamada a bomberos</FormLabel>
                 <FormControl>
                   <Input
+                    value={field.value}
                     name={field.name}
                     type="time"
                     onChange={(e) => {
