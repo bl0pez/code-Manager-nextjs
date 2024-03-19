@@ -21,7 +21,7 @@ export const Modal = ({ title, subtitle, children }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default" size="icon">
+        <Button variant="default" size="icon" title="Crear Codigo">
           <RiMenuAddLine size={20} />
         </Button>
       </DialogTrigger>
