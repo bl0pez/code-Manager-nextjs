@@ -7,6 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model CodeLeak {
+  id                  String   @id @default(uuid())
+  createdAt           DateTime
+  service             String
+  patient_description String
+  informant           String
+  operator            String
+}
+
 model CodeBlue {
   id        String   @id @default(uuid())
   createdAt DateTime

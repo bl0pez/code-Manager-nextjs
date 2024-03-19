@@ -17,8 +17,7 @@ Este es un proyecto para control y manejo de código de un hospital.
 1. Clonar el repositorio
 2. Instalar dependencias con `npm install`
 3. remplazar el archivo `.env.example` por `.env` y llenar las variables de entorno
-4. Levantar el servidor de base de datos con `docker-compose up -d`
-5. Crear deploy de prisma con `npx prisma migrate deploy`
+4. Crear deploy de prisma con `npx prisma migrate deploy`
 
 # Comandos:
 

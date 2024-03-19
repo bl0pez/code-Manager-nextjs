@@ -23,7 +23,7 @@ export const createCodeGreen = async (codeGreenData: CodeGreenValues) => {
   }
 
   try {
-    await prisma.codeAir.create({
+    await prisma.codeGreen.create({
       data: codeGreenData,
     });
 
