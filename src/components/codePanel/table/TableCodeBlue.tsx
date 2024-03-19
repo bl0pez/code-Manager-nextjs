@@ -1,7 +1,7 @@
 import { CodeBlueForm } from "@/components/codePanel/form/CodeBlueForm";
 import { DowloadXlsxButton } from "@/components/DowloadXlsxButton";
 import { getCodeBlue } from "@/actions/codePanel/codeBlue/getCodeBlue";
-import { getCodeBlueTeams } from "@/actions/codePanel/getCodeBlueTeams";
+import { getCodeBlueTeams } from "@/actions/codePanel/codeBlue/getCodeBlueTeams";
 import { getOperators } from "@/actions/codePanel/getOperatos";
 import { MainTable } from "@/components/MainTable";
 import { Modal } from "@/components/Modal";
