@@ -26,6 +26,8 @@ import { CodeBlueSchema, CodeBlueValues } from "@/schema";
 import { InputDate } from "@/components/InputDate";
 import { SelectOperator } from "@/components/SelectOperator";
 import { useFormStatus } from "@/hooks/useFormStatus";
+import { TemplateTextarea } from "@/components/TemplateTextarea";
+import { TemplateButton } from "@/components/template/TemplateButton";
 
 interface Props {
   teams: Team[];
@@ -62,82 +64,56 @@ export const CodeBlueForm = ({ operators, teams }: Props) => {
 
   return (
     <Form {...form}>
-      <form className="space-y-4 w-full" onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-2 gap-3">
-          {/* Fecha y hora */}
-          <FormField
-            control={form.control}
-            name="createdAt"
-            render={({ field }) => (
-              <InputDate
-                name="createdAt"
-                value={field.value}
-                onChange={field.onChange}
-              />
-            )}
-          />
+      <form
+        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        {/* Fecha y hora */}
+        <FormField
+          control={form.control}
+          name="createdAt"
+          render={({ field }) => (
+            <InputDate
+              name="createdAt"
+              value={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        />
 
-          {/* Equipo */}
-          <FormField
-            control={form.control}
-            name="team"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Equipo</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+        {/* Equipo */}
+        <FormField
+          control={form.control}
+          name="team"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Equipo</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecciona un equipo" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {teams.map((team) => (
-                      <SelectItem key={team.id} value={team.title}>
-                        {team.title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                  <FormMessage />
-                </Select>
-              </FormItem>
-            )}
-          />
-
-          {/* Funcionario/a */}
-          <FormField
-            control={form.control}
-            name="informant"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Funcionario/a</FormLabel>
-                <FormControl>
-                  <Input {...field} />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                <SelectContent>
+                  {teams.map((team) => (
+                    <SelectItem key={team.id} value={team.title}>
+                      {team.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          {/* Operador */}
-          <FormField
-            control={form.control}
-            name="operator"
-            render={({ field }) => (
-              <SelectOperator
-                name={field.name}
-                operators={operators}
-                onValueChange={field.onChange}
-                value={field.value}
-              />
-            )}
-          />
-        </div>
-
-        {/* Ubicación */}
+        {/* Funcionario/a */}
         <FormField
           control={form.control}
-          name="location"
+          name="informant"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Ubicación</FormLabel>
+              <FormLabel>Funcionario/a</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -146,14 +122,41 @@ export const CodeBlueForm = ({ operators, teams }: Props) => {
           )}
         />
 
-        <Button
+        {/* Operador */}
+        <FormField
+          control={form.control}
+          name="operator"
+          render={({ field }) => (
+            <SelectOperator
+              name={field.name}
+              operators={operators}
+              onValueChange={field.onChange}
+              value={field.value}
+            />
+          )}
+        />
+
+        {/* Ubicación */}
+        <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => (
+            <TemplateTextarea
+              name={field.name}
+              title="Ubicación"
+              description="Ingresa la ubicación del código azul"
+              onChange={field.onChange}
+              value={field.value}
+            />
+          )}
+        />
+
+        <TemplateButton
           type="submit"
-          className="w-full"
+          isDisabled={isPending}
           title="Crear código azul"
-          disabled={isPending}
-        >
-          Crear
-        </Button>
+          className="col-span-1 sm:col-span-2"
+        />
       </form>
     </Form>
   );

@@ -15,6 +15,9 @@ const validations = {
     required_error: "Ingresa una fecha y hora válida",
     invalid_type_error: "Ingresa una fecha y hora válida",
   }),
+  location: z.string().min(3, {
+    message: "Ingresa una ubicación válida",
+  }),
 };
 
 export const LoginSchema = z.object({
@@ -27,7 +30,7 @@ export interface LoginValues extends z.infer<typeof LoginSchema> {}
 export const CodeBlueSchema = z.object({
   createdAt: validations.createdAt,
   informant: z.string(),
-  location: z.string(),
+  location: validations.location,
   operator: validations.operator,
   team: z.string().min(3, {
     message: "Selecciona un equipo válido",

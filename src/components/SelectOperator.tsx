@@ -1,5 +1,5 @@
 import { Operator } from "@prisma/client";
-import { FormItem, FormLabel, FormMessage } from "./ui/form";
+import { FormControl, FormItem, FormLabel, FormMessage } from "./ui/form";
 import {
   Select,
   SelectContent,
@@ -25,9 +25,11 @@ export const SelectOperator = ({
     <FormItem>
       <FormLabel>Operador</FormLabel>
       <Select name={name} onValueChange={onValueChange} value={value}>
-        <SelectTrigger>
-          <SelectValue placeholder="Selecciona un operador" />
-        </SelectTrigger>
+        <FormControl>
+          <SelectTrigger>
+            <SelectValue placeholder="Selecciona un operador" />
+          </SelectTrigger>
+        </FormControl>
         <SelectContent>
           {operators.map((operator) => (
             <SelectItem key={operator.id} value={operator.fullName}>
@@ -35,8 +37,8 @@ export const SelectOperator = ({
             </SelectItem>
           ))}
         </SelectContent>
-        <FormMessage />
       </Select>
+      <FormMessage />
     </FormItem>
   );
 };
