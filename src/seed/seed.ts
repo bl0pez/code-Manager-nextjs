@@ -1,3 +1,4 @@
+import { CodeBlue } from "@prisma/client";
 import bcryptjs from "bcryptjs";
 
 interface SeedUser {
@@ -16,10 +17,13 @@ interface SeedTeam {
   title: string;
 }
 
+type SeedCodeBlue = Omit<CodeBlue, "id">;
+
 interface SeedData {
   users: SeedUser[];
   operators: SeedOperator[];
   teams: SeedTeam[];
+  codeBlue: SeedCodeBlue[];
 }
 
 export const initialData: SeedData = {
@@ -66,6 +70,55 @@ export const initialData: SeedData = {
     },
     {
       title: "Uci Pediatrica",
+    },
+  ],
+  codeBlue: [
+    {
+      createdAt: new Date("2024-01-15T00:00:00.000Z"),
+      location: "Urgencia",
+      operator: "Bryan Lopez",
+      team: "Urgencia",
+      informant: "Jhon Doe",
+    },
+
+    {
+      createdAt: new Date("2024-02-10T00:00:00.000Z"),
+      location: "Urgencia",
+      operator: "Ignacio Huerta",
+      team: "Urgencia",
+      informant: "Jhon Doe",
+    },
+
+    {
+      createdAt: new Date("2024-03-05T00:00:00.000Z"),
+      location: "Cirugia 4 piso",
+      operator: "Alexander Leiton",
+      team: "Uci",
+      informant: "Jhon Doe",
+    },
+
+    {
+      createdAt: new Date("2024-01-22T00:00:00.000Z"),
+      location: "Urgencia",
+      operator: "Bryan Lopez",
+      team: "Urgencia",
+      informant: "Jhon Doe",
+    },
+
+    {
+      createdAt: new Date("2024-02-20T00:00:00.000Z"),
+      location: "Urgencia",
+      operator: "Ignacio Huerta",
+      team: "Urgencia",
+      informant: "Jhon Doe",
+    },
+
+    {
+      createdAt: new Date("2024-03-12T00:00:00.000Z"),
+      location: "Medicina",
+      operator: "Alexander Leiton",
+      team: "Uci",
+      informant: "Jhon Doe",
     },
   ],
 };

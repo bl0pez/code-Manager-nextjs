@@ -18,7 +18,12 @@ export const InputDate = ({ name, onChange, value }: Props) => {
           value={value ? value.toISOString().slice(0, -8) : ""}
           name={name}
           onChange={(e) => {
-            onChange(new Date(e.target.value));
+            const localDate = new Date(e.target.value);
+            const offset = localDate.getTimezoneOffset();
+            const adjustedDate = new Date(
+              localDate.getTime() - offset * 60 * 1000
+            );
+            onChange(adjustedDate);
           }}
           type="datetime-local"
         />

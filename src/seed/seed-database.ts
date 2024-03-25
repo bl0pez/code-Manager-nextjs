@@ -6,7 +6,7 @@ async function main() {
   await prisma.operator.deleteMany();
   await prisma.team.deleteMany();
 
-  const { users, operators, teams } = initialData;
+  const { users, operators, teams, codeBlue } = initialData;
 
   await prisma.user.createMany({
     data: users,
@@ -18,6 +18,10 @@ async function main() {
 
   await prisma.team.createMany({
     data: teams,
+  });
+
+  await prisma.codeBlue.createMany({
+    data: codeBlue,
   });
 
   console.log("Seed ejecutado correctamente");
