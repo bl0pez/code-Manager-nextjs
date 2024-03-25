@@ -65,7 +65,10 @@ export const CodeRedSchema = z.object({
 export interface CodeRedValues extends z.infer<typeof CodeRedSchema> {}
 
 export const CodeAirSchema = z.object({
-  createdAt: validations.createdAt,
+  createdAt: z.date({
+    invalid_type_error: "Ingresa una fecha y hora válida",
+    required_error: "Ingresa una fecha y hora",
+  }),
   location: z.string({
     invalid_type_error: "Ingresa una ubicación válida",
     required_error: "Ingresa una ubicación",
@@ -79,6 +82,25 @@ export const CodeAirSchema = z.object({
 });
 
 export interface CodeAirValues extends z.infer<typeof CodeAirSchema> {}
+
+export const CodeLeakSchema = z.object({
+  createdAt: z.date(),
+  informant: z.string(),
+  patient_description: z
+    .string({
+      invalid_type_error: "Ingresa una descripción válida",
+      required_error: "Ingresa una descripción",
+    })
+    .min(5, {
+      message: "Mínimo 5 caracteres",
+    }),
+  operator: validations.operator,
+  service: z.string().min(3, {
+    message: "Ingresa un servicio válido",
+  }),
+});
+
+export interface CodeLeakValues extends z.infer<typeof CodeLeakSchema> {}
 
 export const CreateUserSchema = z.object({
   email: validations.email,

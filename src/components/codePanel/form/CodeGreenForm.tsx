@@ -29,6 +29,7 @@ import { SelectOperator } from "@/components/SelectOperator";
 import { createCodeGreen } from "@/actions/codePanel/codeGreen/createCodeGreen";
 import { CodeGreenSchema, CodeGreenValues } from "@/schema";
 import { useFormStatus } from "@/hooks/useFormStatus";
+import { TemplateTextarea } from "@/components/TemplateTextarea";
 
 interface Props {
   operators: Operator[];
@@ -73,7 +74,7 @@ export const CodeGreenForm = ({ operators }: Props) => {
             name="createdAt"
             render={({ field }) => (
               <InputDate
-                name="createdAt"
+                name={field.name}
                 value={field.value}
                 onChange={field.onChange}
               />
@@ -157,18 +158,13 @@ export const CodeGreenForm = ({ operators }: Props) => {
           control={form.control}
           name="location"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Ubicación
-                <FormDescription>
-                  Ingrese la ubicación del código verde
-                </FormDescription>
-              </FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <TemplateTextarea
+              title="Ubicación"
+              description="Ingrese la ubicación donde ocurrió el evento."
+              name={field.name}
+              value={field.value}
+              onChange={field.onChange}
+            />
           )}
         />
 

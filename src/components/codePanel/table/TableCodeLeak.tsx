@@ -3,9 +3,9 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { getOperators } from "@/actions/codePanel/getOperatos";
 import { MainTable } from "@/components/MainTable";
 import { Modal } from "@/components/Modal";
-import { CodeRedForm } from "@/components/codePanel/form/CodeRedForm";
 import { Pagination } from "@/components/Pagination";
 import { getCodeLeakWhitPagination } from "@/actions/codePanel/codeLeak/getCodeLeakWhitPagination";
+import { CodeLeakForm } from "@/components/codePanel/form/CodeLeakForm";
 
 interface Props {
   page: number;
@@ -36,7 +36,7 @@ export const TableCodeLeak = async ({ page, take }: Props) => {
           title="Código de fuga"
           subtitle="Complete el formulario para crear un código de fuga."
         >
-          <CodeRedForm operators={operators} />
+          <CodeLeakForm operators={operators} />
         </Modal>
       </div>
 

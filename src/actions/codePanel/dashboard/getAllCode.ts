@@ -7,7 +7,7 @@ interface Code {
 }
 
 export const getAllCode = async () => {
-  const [codeAir, codeBlue, CodeGreen, codeRed] = await Promise.all([
+  const [codeAir, codeBlue, CodeGreen, codeRed, codeLeak] = await Promise.all([
     prisma.codeAir.findMany({
       select: {
         id: true,
@@ -27,6 +27,12 @@ export const getAllCode = async () => {
       },
     }),
     prisma.codeRed.findMany({
+      select: {
+        id: true,
+        createdAt: true,
+      },
+    }),
+    prisma.codeLeak.findMany({
       select: {
         id: true,
         createdAt: true,
@@ -81,5 +87,6 @@ export const getAllCode = async () => {
     codeBlue: getValuesFromObject(countDataByMonth(codeBlue)),
     CodeGreen: getValuesFromObject(countDataByMonth(CodeGreen)),
     codeRed: getValuesFromObject(countDataByMonth(codeRed)),
+    codeLeak: getValuesFromObject(countDataByMonth(codeLeak)),
   };
 };

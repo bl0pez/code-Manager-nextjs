@@ -18,7 +18,8 @@ const labels = [
 ];
 
 export default async function DashboardPage() {
-  const { codeBlue, codeRed, CodeGreen, codeAir } = await getAllCode();
+  const { codeBlue, codeRed, CodeGreen, codeAir, codeLeak } =
+    await getAllCode();
 
   const dataCodeBlue = {
     labels: labels,
@@ -27,7 +28,7 @@ export default async function DashboardPage() {
         label: "Total de Código Azul",
         data: codeBlue,
         borderWidth: 1,
-        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        backgroundColor: "#2196F3",
       },
     ],
   };
@@ -39,7 +40,7 @@ export default async function DashboardPage() {
         label: "Total de Código Rojo",
         data: codeRed,
         borderWidth: 1,
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        backgroundColor: "#F44336",
       },
     ],
   };
@@ -51,7 +52,7 @@ export default async function DashboardPage() {
         label: "Total de Código Verde",
         data: CodeGreen,
         borderWidth: 1,
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        backgroundColor: "#4CAF50",
       },
     ],
   };
@@ -63,7 +64,19 @@ export default async function DashboardPage() {
         label: "Total de Código Aéreo",
         data: codeAir,
         borderWidth: 1,
-        backgroundColor: "rgba(255, 206, 86, 0.2)",
+        backgroundColor: "#0891B2",
+      },
+    ],
+  };
+
+  const dataCodeLeak = {
+    labels: labels,
+    datasets: [
+      {
+        label: "Total de Código Fuga",
+        data: codeLeak,
+        borderWidth: 1,
+        backgroundColor: "#FFC107",
       },
     ],
   };
@@ -76,6 +89,7 @@ export default async function DashboardPage() {
         <CardBar data={dataCodeGreen} title="Codigo Verde" />
         <CardBar data={dataCodeRed} title="Codigo Rojo" />
         <CardBar data={dataCodeAir} title="Codigo Aéreo" />
+        <CardBar data={dataCodeLeak} title="Codigo Fuga" />
       </div>
     </>
   );
