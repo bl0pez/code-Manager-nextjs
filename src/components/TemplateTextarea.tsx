@@ -30,6 +30,7 @@ export const TemplateTextarea = (props: Props) => {
           value={value}
           onChange={(e) => onChange(e)}
           className="resize-none"
+          spellCheck="true"
         />
       </FormControl>
       <FormMessage />
