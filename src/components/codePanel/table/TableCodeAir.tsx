@@ -1,6 +1,5 @@
 import { getCodeAirWhitPagination } from "@/actions/codePanel/codeAir/getCodeAirWhitPagination";
 import { Modal } from "@/components/Modal";
-import { DowloadXlsxButton } from "@/components/DowloadXlsxButton";
 import { MainTable } from "@/components/MainTable";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { CodeAirForm } from "@/components/codePanel/form/CodeAirForm";
@@ -41,7 +40,6 @@ export const TableCodeAir = async ({ page, take }: Props) => {
         >
           <CodeAirForm operators={operators} />
         </Modal>
-        <DowloadXlsxButton data={data} fileName="CodeGreen" />
       </div>
 
       <MainTable totalPages={totalPages} columns={columns}>

@@ -2,7 +2,6 @@ import { TableCell, TableRow } from "@/components/ui/table";
 
 import { getCodeRedWhitPagination } from "@/actions/codePanel/codeRed/getCodeRedWhitPagination";
 import { getOperators } from "@/actions/codePanel/getOperatos";
-import { DowloadXlsxButton } from "@/components/DowloadXlsxButton";
 import { MainTable } from "@/components/MainTable";
 import { Modal } from "@/components/Modal";
 import { CodeRedForm } from "@/components/codePanel/form/CodeRedForm";
@@ -40,7 +39,6 @@ export const TableCodeRed = async ({ page, take }: Props) => {
         >
           <CodeRedForm operators={operators} />
         </Modal>
-        <DowloadXlsxButton data={codeRed} fileName="CodeRed" />
       </div>
 
       <MainTable totalPages={totalPages} columns={columns}>

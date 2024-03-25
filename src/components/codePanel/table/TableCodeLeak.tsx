@@ -1,7 +1,6 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 
 import { getOperators } from "@/actions/codePanel/getOperatos";
-import { DowloadXlsxButton } from "@/components/DowloadXlsxButton";
 import { MainTable } from "@/components/MainTable";
 import { Modal } from "@/components/Modal";
 import { CodeRedForm } from "@/components/codePanel/form/CodeRedForm";
@@ -39,7 +38,6 @@ export const TableCodeLeak = async ({ page, take }: Props) => {
         >
           <CodeRedForm operators={operators} />
         </Modal>
-        <DowloadXlsxButton data={codeLeak} fileName="CodeRed" />
       </div>
 
       <MainTable totalPages={totalPages} columns={columns}>

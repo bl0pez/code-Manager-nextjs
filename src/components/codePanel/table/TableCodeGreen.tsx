@@ -1,7 +1,6 @@
 import { Pagination } from "@/components/Pagination";
 import { MainTable } from "@/components/MainTable";
 import { Modal } from "@/components/Modal";
-import { DowloadXlsxButton } from "@/components/DowloadXlsxButton";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { getOperators } from "@/actions/codePanel/getOperatos";
 import { CodeGreenForm } from "@/components/codePanel/form/CodeGreenForm";
@@ -39,7 +38,6 @@ export const TableCodeGreen = async ({ page, take }: Props) => {
         >
           <CodeGreenForm operators={operators} />
         </Modal>
-        <DowloadXlsxButton data={codeGreen} fileName="CodeGreen" />
       </div>
 
       <MainTable totalPages={totalPages} columns={columns}>

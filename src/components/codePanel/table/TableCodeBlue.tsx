@@ -1,5 +1,4 @@
 import { CodeBlueForm } from "@/components/codePanel/form/CodeBlueForm";
-import { DowloadXlsxButton } from "@/components/DowloadXlsxButton";
 import { getCodeBlueTeams } from "@/actions/codePanel/codeBlue/getCodeBlueTeams";
 import { getOperators } from "@/actions/codePanel/getOperatos";
 import { MainTable } from "@/components/MainTable";
@@ -29,7 +28,6 @@ export const TableCodeBlue = async ({ page, take }: Props) => {
         >
           <CodeBlueForm operators={operators} teams={teams} />
         </Modal>
-        <DowloadXlsxButton data={codeBlue} fileName="CodeBlue" />
       </div>
 
       <MainTable
