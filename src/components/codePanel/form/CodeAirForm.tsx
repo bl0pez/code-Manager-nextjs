@@ -21,6 +21,7 @@ import { SelectOperator } from "@/components/SelectOperator";
 import { InputDate } from "@/components/InputDate";
 import { Textarea } from "@/components/ui/textarea";
 import { createCodeAir } from "@/actions/codePanel/codeAir/createCodeAir";
+import { TemplateTextarea } from "@/components/TemplateTextarea";
 
 interface Props {
   operators: Operator[];
@@ -105,13 +106,13 @@ export const CodeAirForm = ({ operators }: Props) => {
           control={form.control}
           name="location"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Ubicación</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <TemplateTextarea
+              name={field.name}
+              title="Ubicación"
+              description="Ingresa la ubicación del código azul"
+              onChange={field.onChange}
+              value={field.value}
+            />
           )}
         />
 
