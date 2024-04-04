@@ -32,8 +32,8 @@ export const TableCodeAir = async ({ page, take }: Props) => {
     <>
       <div className="flex gap-2 mb-2">
         <Modal
-          title="Crear Código Verde"
-          subtitle="Complete el formulario para crear un código verde"
+          title="Crear Código Aéreo"
+          subtitle="Complete el formulario para crear un código aéreo"
         >
           <CodeAirForm operators={operators} />
         </Modal>

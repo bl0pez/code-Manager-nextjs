@@ -109,7 +109,7 @@ export const CodeAirForm = ({ operators }: Props) => {
             <TemplateTextarea
               name={field.name}
               title="Ubicación"
-              description="Ingresa la ubicación del código azul"
+              description="Ingresa la ubicación del código aéreo"
               onChange={field.onChange}
               value={field.value}
             />
