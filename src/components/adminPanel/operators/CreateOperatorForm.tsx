@@ -1,6 +1,5 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { Role } from "@prisma/client";
 
 import {
   Form,
@@ -10,19 +9,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFormStatus } from "@/hooks/useFormStatus";
-import { newUser } from "@/actions/adminPanel/user/newUser";
 import { toast } from "react-toastify";
 import { CreateOperatorSchema, CreateOperatorValues } from "@/schema";
 import { createOperator } from "@/actions/adminPanel/operators/createOperator";

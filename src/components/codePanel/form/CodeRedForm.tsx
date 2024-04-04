@@ -28,6 +28,7 @@ import { Button } from "@/components/ui/button";
 import { useFormStatus } from "@/hooks/useFormStatus";
 import { createCodeRed } from "@/actions/codePanel/codeRed/createCodeRed";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { TemplateTextarea } from "@/components/TemplateTextarea";
 
 interface Props {
   operators: Operator[];
@@ -113,37 +114,39 @@ export const CodeRedForm = ({ operators }: Props) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Comunicación radial COE</FormLabel>
-                <FormControl>
-                  <Select
-                    value={
-                      field.value === true
-                        ? "Si"
-                        : field.value === false
-                        ? "No"
-                        : ""
+
+                <Select
+                  name={field.name}
+                  value={
+                    field.value === true
+                      ? "Si"
+                      : field.value === false
+                      ? "No"
+                      : ""
+                  }
+                  onValueChange={(value) => {
+                    if (value == "Si") {
+                      return field.onChange(true);
                     }
-                    onValueChange={(value) => {
-                      if (value == "Si") {
-                        return field.onChange(true);
-                      }
 
-                      if (value == "No") {
-                        return field.onChange(false);
-                      }
+                    if (value == "No") {
+                      return field.onChange(false);
+                    }
 
-                      return field.onChange(undefined);
-                    }}
-                  >
+                    return field.onChange(undefined);
+                  }}
+                >
+                  <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Selecciona una opción" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={"Si"}>Sí</SelectItem>
-                      <SelectItem value={"No"}>No</SelectItem>
-                    </SelectContent>
-                    <FormMessage />
-                  </Select>
-                </FormControl>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value={"Si"}>Sí</SelectItem>
+                    <SelectItem value={"No"}>No</SelectItem>
+                  </SelectContent>
+                  <FormMessage />
+                </Select>
               </FormItem>
             )}
           />
@@ -183,18 +186,13 @@ export const CodeRedForm = ({ operators }: Props) => {
           control={form.control}
           name="location"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Ubicación
-                <FormDescription>
-                  Ingrese la ubicación del código rojo
-                </FormDescription>
-              </FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <TemplateTextarea
+              name={field.name}
+              title="Ubicación"
+              description="Ingresa la ubicación del código rojo"
+              onChange={field.onChange}
+              value={field.value}
+            />
           )}
         />
 

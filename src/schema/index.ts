@@ -61,7 +61,7 @@ export const CodeRedSchema = z.object({
     required_error: "Ingresa una ubicación",
   }),
   operator: validations.operator,
-  firefightersCallTime: z.string().datetime(),
+  firefightersCallTime: z.string().datetime().optional(),
   COERadialCommunication: z.boolean(),
 });
 
