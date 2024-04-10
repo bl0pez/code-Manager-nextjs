@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -15,14 +14,15 @@ interface Props {
   children: React.ReactNode;
   title: string;
   subtitle: string;
+  icon?: React.ReactNode;
 }
 
-export const Modal = ({ title, subtitle, children }: Props) => {
+export const Modal = ({ title, subtitle, children, icon }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default" size="icon" title="Crear Codigo">
-          <RiMenuAddLine size={20} />
+        <Button variant="default" size="icon" title={title}>
+          {icon ? icon : <RiMenuAddLine />}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">

@@ -124,3 +124,52 @@ export const CreateOperatorSchema = z.object({
 
 export interface CreateOperatorValues
   extends z.infer<typeof CreateOperatorSchema> {}
+
+// ===== Nodo =====
+export const CreateNodoSchema = z.object({
+  building: z.string().min(1, {
+    message: "Mínimo 1 caracter",
+  }),
+  nodo: z.coerce
+    .number({
+      invalid_type_error: "Ingresa un número válido",
+      required_error: "Ingresa un número",
+    })
+    .int()
+    .positive({
+      message: "Ingresa un número positivo",
+    }),
+});
+
+export interface CreateNodoValues extends z.infer<typeof CreateNodoSchema> {}
+
+// ===== Device =====
+export const CreateDeviceSchema = z.object({
+  lazo: z.string().min(1, {
+    message: "Mínimo 1 caracter",
+  }),
+  location: z.string().min(1, {
+    message: "Mínimo 1 caracter",
+  }),
+  nodoId: z.string().min(1, {
+    message: "Mínimo 1 caracter",
+  }),
+  typeDeviceId: z.string().min(1, {
+    message: "Mínimo 1 caracter",
+  }),
+  deviceId: z.string().min(1, {
+    message: "Mínimo 1 caracter",
+  }),
+});
+
+export interface CreateDeviceValues
+  extends z.infer<typeof CreateDeviceSchema> {}
+
+export const CreateTypeDeviceSchema = z.object({
+  type: z.string().min(2, {
+    message: "Mínimo 2 caracter",
+  }),
+});
+
+export interface CreateTypeDeviceValues
+  extends z.infer<typeof CreateTypeDeviceSchema> {}

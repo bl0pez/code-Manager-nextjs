@@ -6,6 +6,7 @@ import { FaFire } from "react-icons/fa";
 import { FaHelicopter } from "react-icons/fa";
 import { FaRunning } from "react-icons/fa";
 import { RiAdminLine } from "react-icons/ri";
+import { GiMovementSensor } from "react-icons/gi";
 import clsx from "clsx";
 
 import { SidebarMenuItem } from "./SidebarMenuItem";
@@ -37,6 +38,11 @@ const menuItems = [
     path: "/codeRed",
     title: "Código Rojo",
     icon: <FaFire className={`text-red-600 ${className}`} />,
+  },
+  {
+    path: "/fireAlarms",
+    title: "Alarmas de Incendio",
+    icon: <GiMovementSensor className={`text-indigo-600 ${className}`} />,
   },
   {
     path: "/codeAir",
