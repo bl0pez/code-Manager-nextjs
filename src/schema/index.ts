@@ -132,7 +132,7 @@ export const CreateNodoSchema = z.object({
     .min(1, {
       message: "Mínimo 1 caracter",
     })
-    .toUpperCase(),
+    .transform((value) => value.toUpperCase()),
   nodo: z.coerce
     .number({
       invalid_type_error: "Ingresa un número válido",
