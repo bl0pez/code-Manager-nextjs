@@ -127,9 +127,12 @@ export interface CreateOperatorValues
 
 // ===== Nodo =====
 export const CreateNodoSchema = z.object({
-  building: z.string().min(1, {
-    message: "Mínimo 1 caracter",
-  }),
+  building: z
+    .string()
+    .min(1, {
+      message: "Mínimo 1 caracter",
+    })
+    .toUpperCase(),
   nodo: z.coerce
     .number({
       invalid_type_error: "Ingresa un número válido",
