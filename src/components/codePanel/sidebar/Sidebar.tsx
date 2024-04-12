@@ -40,11 +40,6 @@ const menuItems = [
     icon: <FaFire className={`text-red-600 ${className}`} />,
   },
   {
-    path: "/fireAlarms",
-    title: "Alarmas de Incendio",
-    icon: <GiMovementSensor className={`text-indigo-600 ${className}`} />,
-  },
-  {
     path: "/codeAir",
     title: "Código Aéreo",
     icon: <FaHelicopter className={`text-cyan-600 ${className}`} />,
@@ -53,6 +48,11 @@ const menuItems = [
     path: "/codeLeak",
     title: "Código Fuga",
     icon: <FaRunning className={`text-yellow-600 ${className}`} />,
+  },
+  {
+    path: "/fireAlarms",
+    title: "Alarmas de Incendio",
+    icon: <GiMovementSensor className={`text-indigo-600 ${className}`} />,
   },
 ];
 
