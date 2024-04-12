@@ -1,15 +1,39 @@
-version: "3"
+version: "3.8"
 
 services:
-  codeManagerDB:
-    image: postgres:15.3
-    container_name: codeManagerDB
+  code-manager-nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: code-manager-nextjs
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      AUTH_SECRET: ${AUTH_SECRET}
+    networks:
+      - code-manager-network
+    depends_on:
+      - code-manager-db
+
+  code-manager-db:
+    image: postgres:latest
+    container_name: code-manager-db
     restart: always
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - postgresDB:/data/postgres
+    networks:
+      - code-manager-network
+
+networks:
+  code-manager-network:
+    driver: bridge
+
+volumes:
+  postgresDB:
